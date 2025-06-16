@@ -84,3 +84,341 @@ body {
     margin: 0;
     padding: 0;
 }
+
+/*ESTILOSSS DE LOS DEMASSSS ARCHIVOSSSSSS===============================================================*/
+
+/*BOTONESSSSSSSSSSSSSSSSS==============================================================*/
+
+
+/* resources/static/css/botones.css */
+
+/* Estilo base para botones */
+.action-button {
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    font-size: 18px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+/* Botón Ver Información */
+.btn-informacion {
+    background-color: #39A900; /* Verde */
+    border-left: 5px solid #349a02;
+}
+
+.btn-informacion:hover {
+    background-color: #39A900;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgb(1, 133, 56);
+}
+
+/* Botón Ver Bitácoras */
+.btn-bitacoras {
+    background-color: #339EFF; /* Azul claro */
+    border-left: 5px solid #288ae3;
+}
+
+.btn-bitacoras:hover {
+    background-color: #288ae3;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgb(0, 70, 198);
+}
+/* Botón Ver Seguimiento */
+.btn-seguimiento {
+    background-color: #1A4D80; /* Azul oscuro */
+    border-left: 5px solid #17436e;
+}
+.btn-seguimiento:hover {
+    background-color: #17436e;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgb(10, 33, 112);
+}
+
+/*=================CARDSSSSSS============================0*/
+
+/* Estilos para tarjetas */
+.progress-card,
+.actions-card {
+    width: 380px;
+    padding: 25px;
+    border-radius: 15px;
+    background-color: var(--color-white);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--color-text);
+}
+
+.date-info {
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.actions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .dashboard-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .progress-card,
+    .actions-card {
+        width: 90%;
+        max-width: 400px;
+    }
+}
+
+/**======================================EDITARRR PERFILLLL===========================/
+
+/* editarperfil.css - Estilos para la página de editar perfil */
+
+/* Contenedor principal centrado - Fondo plano */
+.form-container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border: 1px solid #dee2e6;
+}
+
+/* Estilo para las filas del formulario */
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+/* Etiquetas con ancho fijo */
+.form-label-fixed {
+    width: 180px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #333;
+    text-align: right;
+    padding-right: 10px;
+}
+
+/* Campos de entrada amplios */
+.form-control-wide, .form-select-wide {
+    flex: 1;
+    min-width: 400px;
+    padding: 10px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Estado deshabilitado con mejor apariencia */
+.form-control-wide:disabled, .form-select-wide:disabled {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Botones de acción en la parte superior */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+    gap: 10px;
+}
+
+/* Botones de formulario centrados */
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Título centrado */
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* Contenedor principal para centrar correctamente */
+.main-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-label-fixed {
+        width: 100%;
+        text-align: left;
+        padding-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .form-control-wide, .form-select-wide {
+        min-width: 100%;
+    }
+
+    .main-content {
+        width: 100%;
+        padding: 20px 10px;
+    }
+}
+
+/**GRAFICCCOOOOOOOOOOOO=============================================/
+
+/* resources/static/css/grafico.css */
+
+.progress-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.progress-circle {
+    width: 250px;
+    height: 250px;
+    position: relative;
+}
+
+.progress-circle-background {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 15px solid #e0e0e0;
+    box-sizing: border-box;
+}
+
+.progress-circle-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 15px solid transparent;
+    border-top-color: var(--color-primary);
+    box-sizing: border-box;
+    clip: rect(0, 125px, 250px, 0);
+    transform: rotate(90deg);
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 36px;
+    font-weight: bold;
+    color: var(--color-text);
+    z-index: 2;
+}
+
+/**LAYOUTTTTT=============================================/
+
+/* Estructura principal */
+#sidebar {
+    background-color: var(--color-primary);
+    min-height: 100vh;
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    text-align: center;
+    padding: 30px 0 20px;
+}
+
+.sidebar-header img {
+    height: 100px;
+}
+
+.nav-link {
+    color: var(--color-white);
+    padding: 12px 20px;
+    font-size: 1.1rem;
+}
+
+.nav-link:hover {
+    background-color: var(--color-primary-dark);
+}
+
+#main-content {
+    margin-left: var(--sidebar-width);
+    padding: 30px;
+}
+
+.main-title {
+    color: var(--color-primary);
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+/*========================LOGINNN===========================*/
+
+
+body {
+    background-color: #39A900;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+.login-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}

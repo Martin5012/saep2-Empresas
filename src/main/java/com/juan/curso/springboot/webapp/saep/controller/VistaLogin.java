@@ -2,6 +2,7 @@ package com.juan.curso.springboot.webapp.saep.controller;
 
 import com.juan.curso.springboot.webapp.saep.model.Usuarios;
 import com.juan.curso.springboot.webapp.saep.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,21 +22,25 @@ public class VistaLogin {
     @PostMapping("/login")
     public String procesarLogin(@RequestParam String username,
                                 @RequestParam String password,
-                                Model model) {
+                                Model model, HttpSession session) {
         Usuarios usuario = usuarioRepository.findByNumeroAndClave(username, password);
 
         String nombreRol = null;
         if (usuario != null) {
             nombreRol = usuario.getRol().getRoles();
 
+            // ★ AQUÍ GUARDAMOS EL USUARIO EN LA SESIÓN ★
+            session.setAttribute("usuarioLogueado", usuario);
+            session.setAttribute("idUsuarioLogueado", usuario.getId_usuarios());
+
             // Redirección según el rol
             switch (nombreRol.trim().toUpperCase()) {
                 case "ADMINISTRADOR DEL SISTEMA":
                     return "redirect:/vista/empresas";
-                case "INSTRUCTOR":
-                    return "redirect:/instructor/inicio";
+                case "EVALUADOR":
+                    return "redirect:/vista/empresas";
                 case "APRENDIZ":
-                    return "redirect:/aprendiz/inicio";
+                    return "redirect:/vista/aprendiz";
                 default:
                     model.addAttribute("error", "Rol no reconocido: " + nombreRol);
                     return "login";

@@ -7,7 +7,7 @@
     <!-- CSS desde local -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <!-- CSS específico para editar perfil -->
-    <link rel="stylesheet" th:href="@{/css/editarperfil.css}">
+    <!--<link rel="stylesheet" th:href="@{/css/editarperfil.css}">-->
 </head>
 <body style="margin-left: 220px; background-color: #f8f9fa;">
 
@@ -65,6 +65,9 @@
         <form th:action="@{/vistaEditar/guardar}" th:object="${usuarios}" method="post" novalidate>
             <!-- Campo oculto para conservar el ID al editar -->
             <input type="hidden" th:field="*{id_usuarios}" />
+
+            <!-- Campo oculto para conservar el ID al editar -->
+            <input type="hidden" th:field="*{clave}" />
 
             <!-- Nombres -->
             <div class="form-row">
@@ -131,12 +134,12 @@
                 <label class="form-label-fixed">Rol:</label>
                 <select th:field="*{id_rol}" class="form-select-wide" required disabled>
                     <option value="" disabled th:if="${usuarios.id_rol == null}" selected>Seleccione una opción</option>
-                    <option value="1">Aprendiz</option>
-                    <option value="2">Evaluador</option>
-                    <option value="3">Coevaluador</option>
-                    <option value="4">Auxiliar</option>
-                    <option value="5">Funcionario</option>
-                    <option value="6">Administrador</option>
+                    <option value="1" th:selected="${usuarios.id_rol == 1}">Aprendiz</option>
+                    <option value="2" th:selected="${usuarios.id_rol == 2}">Evaluador</option>
+                    <option value="3" th:selected="${usuarios.id_rol == 3}">Coevaluador</option>
+                    <option value="4" th:selected="${usuarios.id_rol == 4}">Auxiliar</option>
+                    <option value="5" th:selected="${usuarios.id_rol == 5}">Funcionario</option>
+                    <option value="6" th:selected="${usuarios.id_rol == 6}">Administrador</option>
                 </select>
             </div>
 
@@ -170,6 +173,6 @@
 <!-- JavaScript general del sitio -->
 <script th:src="@{/js/script.js}"></script>
 <!-- JavaScript específico para editar perfil -->
-<script th:src="@{/js/editarperfil.js}"></script>
+<!--<script th:src="@{/js/editarperfil.js}"></script>-->
 </body>
 </html>

@@ -20,19 +20,33 @@ public class Usuarios {
     private String contacto2;
     private String clave;
     private String estado;
-    //private Integer id_rol;
 
-
-    @Column(name = "id_rol", insertable = false, updatable = false)
-    private Integer id_rol;  // Esta propiedad solo se mapea como una columna, sin modificarla
-
-    @ManyToOne
-    @JoinColumn(name = "id_rol") // esta columna debe existir en la tabla usuario
+    // SOLUCIÓN: Usar @ManyToOne con insertable=true, updatable=true
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_rol", insertable = true, updatable = true)
     private Rol rol;
 
+    // Método auxiliar para obtener el id_rol como Integer (para compatibilidad con el HTML)
+    public Integer getId_rol() {
+        if (rol != null && rol.getId_rol() != null) {
+            return rol.getId_rol().intValue(); // Convertir Long a Integer
+        }
+        return null;
+    }
 
-    // Getters y Setters
+    // Método auxiliar para establecer el rol por ID (recibe Integer desde el HTML)
+    public void setId_rol(Integer id_rol) {
+        if (id_rol != null) {
+            // Crear un objeto Rol temporal solo con el ID
+            Rol rolTemp = new Rol();
+            rolTemp.setId_rol(id_rol.longValue()); // Convertir Integer a Long
+            this.rol = rolTemp;
+        } else {
+            this.rol = null;
+        }
+    }
 
+    // Getters y Setters originales
     public Long getId_usuarios() {
         return id_usuarios;
     }
@@ -127,14 +141,6 @@ public class Usuarios {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public Integer getId_rol() {
-        return id_rol;
-    }
-
-    public void setId_rol(Integer id_rol) {
-        this.id_rol = id_rol;
     }
 
     public Rol getRol() {
