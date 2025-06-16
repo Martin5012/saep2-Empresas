@@ -1,11 +1,19 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.juan.curso.springboot.webapp.saep.model.Empresas;
 import com.juan.curso.springboot.webapp.saep.repository.EmpresasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController // Indica que devuelve JSON y no HTML
 @RequestMapping ("/api/empresas") // Prefijo común para todas las rutas
@@ -24,6 +32,13 @@ public class EmpresasController
         return empresasRepository.findById(id).orElse(null);
     }
 
+    @GetMapping("/vista/empresas/nueva") // o el endpoint que uses
+    public String mostrarFormularioEmpresa(Model model) {
+        model.addAttribute("empresas", new Empresas());
+
+
+        return "formularioEmpresa"; // el nombre de tu archivo .html
+    }
     @PostMapping
     public Empresas create(@RequestBody Empresas empresas) {
         return empresasRepository.save(empresas); // Guarda un nuevo producto
@@ -31,7 +46,7 @@ public class EmpresasController
 
     @PutMapping("/{id}")
     public Empresas update(@PathVariable Long id, @RequestBody Empresas empresas) {
-        empresas.setId_Empresas(id);
+        empresas.setId_empresas(id);
         return empresasRepository.save(empresas); // Actualiza producto existente
     }
 
@@ -39,4 +54,24 @@ public class EmpresasController
     public void delete(@PathVariable Long id) {
         empresasRepository.deleteById(id); // Elimina el producto
     }
+
+    @GetMapping("/ciudades")
+    public List<String> obtenerCiudadesPorDepartamento(@RequestParam String departamento) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream inputStream = new ClassPathResource("static/data/colombia.json").getInputStream();
+            List<Map<String, Object>> data = mapper.readValue(inputStream, new TypeReference<>() {});
+
+            for (Map<String, Object> entry : data) {
+                if (entry.get("departamento").equals(departamento)) {
+                    return (List<String>) entry.get("ciudades");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+
 }
