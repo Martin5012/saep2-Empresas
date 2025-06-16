@@ -19,9 +19,23 @@ import java.util.Map;
 @RequestMapping ("/api/empresas") // Prefijo común para todas las rutas
 public class EmpresasController
 {
+
     @Autowired
     private EmpresasRepository empresasRepository;
+    @GetMapping("/vista/empresas")
+    public String mostrarBusqueda(@RequestParam(name = "buscar", required = false) String buscar, Model model) {
+        List<Empresas> empresas;
 
+        if (buscar != null && !buscar.isEmpty()) {
+            // Usa tu repositorio para filtrar (requiere método personalizado)
+            empresas = empresasRepository.buscarPorCriterio(buscar);
+        } else {
+            empresas = empresasRepository.findAll();
+        }
+
+        model.addAttribute("empresas", empresas);
+        return "empresas";
+    }
     @GetMapping
     public List<Empresas> getAll() {
         return empresasRepository.findAll(); // Devuelve todos los productos en JSON
@@ -72,6 +86,7 @@ public class EmpresasController
         }
         return Collections.emptyList();
     }
+
 
 
 }
