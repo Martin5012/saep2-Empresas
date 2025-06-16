@@ -1,15 +1,15 @@
 package com.juan.curso.springboot.webapp.saep.model;
 
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="usuarios")
+@Table(name = "usuarios")
 public class Usuarios {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuarios;
+
     private String tipo_dc;
     private String numero;
     private String nombres;
@@ -21,7 +21,13 @@ public class Usuarios {
     private String contacto2;
     private String clave;
     private String estado;
-    private Integer id_rol;
+
+    @ManyToOne
+    @JoinColumn(name = "id_rol") // esta columna debe existir en la tabla usuario
+    private Rol rol;
+
+
+    // Getters y Setters
 
     public Long getId_usuarios() {
         return id_usuarios;
@@ -119,11 +125,11 @@ public class Usuarios {
         this.estado = estado;
     }
 
-    public Integer getId_rol() {
-        return id_rol;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setId_rol(Integer id_rol) {
-        this.id_rol = id_rol;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }
