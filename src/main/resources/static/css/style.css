@@ -67,3 +67,20 @@ body {
 .sidebar a:hover {
     background-color: #871919;
 }
+/* Estilos base y variables */
+:root {
+    --color-primary: #39A900;
+    --color-primary-dark: #2d8700;
+    --color-white: #ffffff;
+    --color-light-bg: #f8f9fa;
+    --color-text: #333333;
+    --sidebar-width: 220px;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--color-light-bg);
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+}
