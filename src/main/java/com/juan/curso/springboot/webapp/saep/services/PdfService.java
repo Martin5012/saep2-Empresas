@@ -23,7 +23,7 @@ public class PdfService {
             BaseColor verdeSena = new BaseColor(57, 169, 0);
 
             // Fondo (opcional, si quieres añadir una imagen como fondo)
-            Image background = Image.getInstance("src/main/java/com/juan/curso/springboot/webapp/saep/services/img/fondo.png");
+            Image background = Image.getInstance("saep2-Empresas/src/main/java/com/juan/curso/springboot/webapp/saep/services/img/fondo.png");
             background.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
             background.setAbsolutePosition(0, 0);
             writer.getDirectContentUnder().addImage(background);
@@ -49,7 +49,7 @@ public class PdfService {
                 tabla.addCell(cell);
             }
 
-            try (Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/saep2", "root", "");
+            try (Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/saep", "root", "");
                  PreparedStatement pst = cn.prepareStatement("SELECT nit, nombre, direccion, area, contacto, email, departamento, ciudad, estado FROM empresas");
                  ResultSet rs = pst.executeQuery()) {
 
