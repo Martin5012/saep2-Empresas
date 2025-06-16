@@ -1,7 +1,6 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
 import com.juan.curso.springboot.webapp.saep.model.Usuarios;
-import com.juan.curso.springboot.webapp.saep.model.Usuarios;
 import com.juan.curso.springboot.webapp.saep.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class vistaLogin {
+public class VistaLogin {
 
     @Autowired
     private UsuarioRepository usuarioRepository;

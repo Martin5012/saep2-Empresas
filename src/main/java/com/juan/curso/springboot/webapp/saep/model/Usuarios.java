@@ -9,7 +9,6 @@ public class Usuarios {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuarios;
-
     private String tipo_dc;
     private String numero;
     private String nombres;
@@ -21,6 +20,11 @@ public class Usuarios {
     private String contacto2;
     private String clave;
     private String estado;
+    //private Integer id_rol;
+
+
+    @Column(name = "id_rol", insertable = false, updatable = false)
+    private Integer id_rol;  // Esta propiedad solo se mapea como una columna, sin modificarla
 
     @ManyToOne
     @JoinColumn(name = "id_rol") // esta columna debe existir en la tabla usuario
@@ -123,6 +127,14 @@ public class Usuarios {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Integer getId_rol() {
+        return id_rol;
+    }
+
+    public void setId_rol(Integer id_rol) {
+        this.id_rol = id_rol;
     }
 
     public Rol getRol() {
