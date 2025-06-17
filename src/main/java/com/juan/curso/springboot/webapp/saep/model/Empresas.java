@@ -9,7 +9,7 @@ public class Empresas
     @Id
     @GeneratedValue(strategy = GenerationType. IDENTITY) // Auto-incremental
     //Long para reconocerlo como llave primaria
-    private Long id_Empresas;
+    private Long id_empresas;
     private  Integer id_Usuarios;
     private String nit;
     private String nombre;
@@ -21,12 +21,12 @@ public class Empresas
     private String ciudad;
     private String estado;
 
-    public Long getId_Empresas() {
-        return id_Empresas;
+    public Long getId_empresas() {
+        return id_empresas;
     }
 
-    public void setId_Empresas(Long id_Empresas) {
-        this.id_Empresas = id_Empresas;
+    public void setId_empresas(Long id_empresas) {
+        this.id_empresas = id_empresas;
     }
 
     public Integer getId_Usuarios() {

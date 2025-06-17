@@ -49,6 +49,10 @@ public class VistaAprendices
     @GetMapping("/vistaa/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         Aprendices aprendices = aprendicesRepository.findById(id).orElse(null);
+        model.addAttribute("usuarios", usuariosRepository.findAll()); // Objeto vacío para el formulario
+        model.addAttribute("fichas", fichasRepository.findAll()); // Objeto vacío para el formulario
+        model.addAttribute("modalidad", modalidadRepository.findAll()); // Objeto vacío para el formulario
+        model.addAttribute("empresas", empresasRepository.findAll()); // Objeto vacío para el formulario
         model.addAttribute("aprendices", aprendices);
         return "aprendices_form"; // Usa la misma vista que para crear
     }

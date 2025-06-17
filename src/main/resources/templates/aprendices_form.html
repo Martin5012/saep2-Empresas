@@ -47,6 +47,66 @@
         <!-- Campo oculto para conservar el ID al editar -->
         <input type="hidden" th:field="*{id_aprendices}" />
 
+        <div class="mb-3">
+            <label class="form-label">Nombres y Apellidos</label>
+            <select th:field="*{idUsuarios}" class="form-select" required>
+                <option value="" disabled selected>Seleccione los Nombres y Apellidos</option>
+                <option th:each="usuarios : ${usuarios}"
+                        th:value="${usuarios.id_usuarios}"
+                        th:text="${usuarios.nombres+' '+usuarios.apellidos}"
+                        th:selected="${aprendices.idUsuarios != null and aprendices.idUsuarios.id_usuarios == usuarios.id_usuarios}">
+                </option>
+            </select>
+        </div>
+
+ <div class="mb-3">
+            <label class="form-label">Codigo de Ficha</label>
+            <select th:field="*{idFichas}" class="form-select" required>
+                <option value="" disabled selected>Seleccione un Codigo</option>
+                <option th:each="fichas : ${fichas}"
+                        th:value="${fichas.id_fichas}"
+                        th:text="${fichas.codigo}"
+                        th:selected="${aprendices.idFichas != null and aprendices.idFichas.id_fichas == fichas.id_fichas}">
+                </option>
+            </select>
+        </div>
+
+ <div class="mb-3">
+            <label class="form-label">Empresa</label>
+            <select th:field="*{idEmpresas}" class="form-select" required>
+                <option value="" disabled selected>Seleccione una Empresa</option>
+                <option th:each="empresas : ${empresas}"
+                        th:value="${empresas.id_empresas}"
+                        th:text="${empresas.nombre}"
+                        th:selected="${aprendices.idEmpresas != null and aprendices.idEmpresas.id_empresas == empresas.id_empresas}">
+                </option>
+            </select>
+        </div>
+
+ <div class="mb-3">
+            <label class="form-label">Nombres y Apellidos</label>
+            <select th:field="*{idInstructor}" class="form-select" required>
+                <option value="" disabled selected>Seleccione los Nombres y Apellidos</option>
+                <option th:each="usuarios : ${usuarios}"
+                        th:value="${usuarios.id_usuarios}"
+                        th:text="${usuarios.nombres+' '+usuarios.apellidos}"
+                        th:selected="${aprendices.idInstructor != null and aprendices.idInstructor.id_usuarios == usuarios.id_usuarios}">
+                </option>
+            </select>
+        </div>
+
+ <div class="mb-3">
+            <label class="form-label">Nombres y Apellidos</label>
+            <select th:field="*{idUsuarios}" class="form-select" required>
+                <option value="" disabled selected>Seleccione los Nombres y Apellidos</option>
+                <option th:each="usuarios : ${usuarios}"
+                        th:value="${usuarios.id_usuarios}"
+                        th:text="${usuarios.nombres+' '+usuarios.apellidos}"
+                        th:selected="${aprendices.idUsuarios != null and aprendices.idUsuarios.id_usuarios == usuarios.id_usuarios}">
+                </option>
+            </select>
+        </div>
+
 
 <!--        <div class="mb-3">-->
 <!--            <label class="form-label">ID Usuario</label>-->
