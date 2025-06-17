@@ -42,11 +42,26 @@
     <!-- Título -->
     <h1 class="text-success">Lista de Fichas</h1>
 
+
+
+
     <!-- Mensaje flash si se guarda o elimina un producto -->
     <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
 
     <!-- Botón para ir al formulario -->
     <a th:href="@{/vistaf/form}" class="btn btn-success mb-3">Registrar Ficha</a>
+    <a class="btn btn-danger mb-3" th:href="@{/vistaf/pdf}">📄 Exportar PDF</a>
+    <a class="btn btn-success mb-3" th:href="@{/vistaf/excel}">📊 Exportar Excel</a>
+
+    <!-- Barra de búsqueda -->
+    <form class="input-group mb-3" th:action="@{/vista/fichas}" method="get">
+        <input type="text" name="buscar" class="form-control" placeholder="Buscar por código o estado..." />
+        <button class="btn btn-outline-secondary" type="submit">🔍 Buscar</button>
+    </form>
+
+    <div th:if="${#lists.isEmpty(fichas)}" class="alert alert-warning">
+        No se encontraron resultados para tu búsqueda.
+    </div>
 
     <!-- Tabla de productos -->
     <table class="table table-bordered table-striped">

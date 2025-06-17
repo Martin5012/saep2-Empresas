@@ -9,28 +9,8 @@ public class Aprendices
     @Id
     @GeneratedValue(strategy = GenerationType. IDENTITY)
     private Long id_aprendices;
+    private Integer id_usuarios,id_fichas,id_empresas,id_instructor,id_modalidad;
     private String estado;
-
-    @ManyToOne
-    @JoinColumn(name = "id_usuarios")
-    private Usuarios idUsuarios;
-
-    @ManyToOne
-    @JoinColumn(name = "id_fichas")
-    private Fichas idFichas;
-
-    @ManyToOne
-    @JoinColumn(name = "id_empresas")
-    private Empresas idEmpresas;
-
-    @ManyToOne
-    @JoinColumn(name = "id_instructor")
-    private Usuarios idInstructor;
-
-    @ManyToOne
-    @JoinColumn(name = "id_modalidad")
-    private Modalidad idModalidades;
-
 
     public Long getId_aprendices() {
         return id_aprendices;
@@ -40,44 +20,44 @@ public class Aprendices
         this.id_aprendices = id_aprendices;
     }
 
-    public Usuarios getIdUsuarios() {
-        return idUsuarios;
+    public Integer getId_usuarios() {
+        return id_usuarios;
     }
 
-    public void setIdUsuarios(Usuarios idUsuarios) {
-        this.idUsuarios = idUsuarios;
+    public void setId_usuarios(Integer id_usuarios) {
+        this.id_usuarios = id_usuarios;
     }
 
-    public Fichas getIdFichas() {
-        return idFichas;
+    public Integer getId_fichas() {
+        return id_fichas;
     }
 
-    public void setIdFichas(Fichas idFichas) {
-        this.idFichas = idFichas;
+    public void setId_fichas(Integer id_fichas) {
+        this.id_fichas = id_fichas;
     }
 
-    public Empresas getIdEmpresas() {
-        return idEmpresas;
+    public Integer getId_modalidad() {
+        return id_modalidad;
     }
 
-    public void setIdEmpresas(Empresas idEmpresas) {
-        this.idEmpresas = idEmpresas;
+    public void setId_modalidad(Integer id_modalidad) {
+        this.id_modalidad = id_modalidad;
     }
 
-    public Usuarios getIdInstructor() {
-        return idInstructor;
+    public Integer getId_empresas() {
+        return id_empresas;
     }
 
-    public void setIdInstructor(Usuarios idInstructor) {
-        this.idInstructor = idInstructor;
+    public void setId_empresas(Integer id_empresas) {
+        this.id_empresas = id_empresas;
     }
 
-    public Modalidad getIdModalidades() {
-        return idModalidades;
+    public Integer getId_instructor() {
+        return id_instructor;
     }
 
-    public void setIdModalidades(Modalidad idModalidades) {
-        this.idModalidades = idModalidades;
+    public void setId_instructor(Integer id_instructor) {
+        this.id_instructor = id_instructor;
     }
 
     public String getEstado() {

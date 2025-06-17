@@ -53,11 +53,11 @@
         <thead class="table-success">
         <tr>
             <th>ID Aprendiz</th>
-            <th>Nombres y Apellidos</th>
-            <th>Codigo de Ficha</th>
-            <th>Empresa</th>
-            <th>Instructor</th>
-            <th>Modalidad</th>
+            <th>ID Usuario</th>
+            <th>ID Ficha</th>
+            <th>ID Empresa</th>
+            <th>ID Instructor</th>
+            <th>ID Modalidad</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
@@ -66,11 +66,11 @@
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="aprendices : ${aprendices}">
             <td th:text="${aprendices.id_aprendices}"></td>
-            <td th:text="${aprendices.idUsuarios != null ? aprendices.idUsuarios.nombres + ' ' + aprendices.idUsuarios.apellidos : 'Sin usuario'}"></td>
-            <td th:text="${aprendices.idFichas != null ? aprendices.idFichas.codigo : 'Sin Codigo'}"></td>
-            <td th:text="${aprendices.idEmpresas != null ? aprendices.idEmpresas.nombre : 'Sin Empresa'}"></td>
-            <td th:text="${aprendices.idInstructor != null ? aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos : 'Sin Instructor'}"></td>
-            <td th:text="${aprendices.idModalidades != null ? aprendices.idModalidades.modalidades : 'Sin Modalidad'}"></td>
+            <td th:text="${aprendices.id_usuarios}"></td>
+            <td th:text="${aprendices.id_fichas}"></td>
+            <td th:text="${aprendices.id_empresas}"></td>
+            <td th:text="${aprendices.id_instructor}"></td>
+            <td th:text="${aprendices.id_modalidad}"></td>
             <td th:text="${aprendices.estado}"></td>
             <td>
                 <a th:href="@{'/vistaa/editar/' + ${aprendices.id_aprendices}}" class="btn btn-warning btn-sm">Editar</a>
