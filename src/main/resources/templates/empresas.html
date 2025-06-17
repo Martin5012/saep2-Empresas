@@ -30,69 +30,68 @@
         <a class="nav-link text-white" th:href="@{/vista/novedades}">💾 Novedades</a>
         <a class="nav-link text-white" th:href="@{/vista/programas}">🛠️ Programas</a>
         <a class="nav-link text-white" th:href="@{/vista/rol}">📎 Roles</a>
-        <a class="nav-link text-white" th:href="@{/vista/sede}">🖼️ Sede</a>
+        <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
-        <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
     </nav>
 </div>
 
 <!-- Contenido principal -->
 <div style="padding: 20px;">
 
-    <!-- Título -->
-    <h1 class="text-success">Lista de Empresas</h1>
+<!-- Título -->
+<h1 class="text-success">Lista de Empresas</h1>
 
-    <!-- Mensaje flash si se guarda o elimina un producto -->
-    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+<!-- Mensaje flash si se guarda o elimina un producto -->
+<div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
 
-    <!-- Botón para ir al formulario -->
-    <a th:href="@{/vista/form}" class="btn btn-success mb-3">Registrar Empresa</a>
+<!-- Botón para ir al formulario -->
+<a th:href="@{/vista/form}" class="btn btn-success mb-3">Registrar Empresa</a>
 
-    <!-- Tabla de productos -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-success">
-        <tr>
-            <th>ID Empresa</th>
-            <th>ID Usuarios</th>
-            <th>Nit</th>
-            <th>Nombre</th>
-            <th>Direccion</th>
-            <th>Area</th>
-            <th>Contacto</th>
-            <th>Email</th>
-            <th>Departamento</th>
-            <th>Ciudad</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Itera sobre la lista de productos enviada desde el controlador -->
-        <tr th:each="empresas : ${empresas}">
-            <td th:text="${empresas.id_empresas}"></td>
-            <td th:text="${empresas.id_usuarios}"></td>
-            <td th:text="${empresas.nit}"></td>
-            <td th:text="${empresas.nombre}"></td>
-            <td th:text="${empresas.direccion}"></td>
-            <td th:text="${empresas.area}"></td>
-            <td th:text="${empresas.contacto}"></td>
-            <td th:text="${empresas.email}"></td>
-            <td th:text="${empresas.departamento}"></td>
-            <td th:text="${empresas.ciudad}"></td>
-            <td th:text="${empresas.estado}"></td>
-            <td>
-                <a th:href="@{'/vista/editar/' + ${empresas.id_empresas}}" class="btn btn-warning btn-sm">Editar</a>
-                <form th:action="@{'/vista/eliminar/' + ${empresas.id_empresas}}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('¿Está seguro que desea eliminar este producto?')">
-                        Eliminar
-                    </button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<!-- Tabla de productos -->
+<table class="table table-bordered table-striped">
+    <thead class="table-success">
+    <tr>
+        <th>ID Empresa</th>
+        <th>ID Usuarios</th>
+        <th>Nit</th>
+        <th>Nombre</th>
+        <th>Direccion</th>
+        <th>Area</th>
+        <th>Contacto</th>
+        <th>Email</th>
+        <th>Departamento</th>
+        <th>Ciudad</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Itera sobre la lista de productos enviada desde el controlador -->
+    <tr th:each="empresas : ${empresas}">
+        <td th:text="${empresas.id_Empresas}"></td>
+        <td th:text="${empresas.id_Usuarios}"></td>
+        <td th:text="${empresas.nit}"></td>
+        <td th:text="${empresas.nombre}"></td>
+        <td th:text="${empresas.direccion}"></td>
+        <td th:text="${empresas.area}"></td>
+        <td th:text="${empresas.contacto}"></td>
+        <td th:text="${empresas.email}"></td>
+        <td th:text="${empresas.departamento}"></td>
+        <td th:text="${empresas.ciudad}"></td>
+        <td th:text="${empresas.estado}"></td>
+        <td>
+            <a th:href="@{'/vista/editar/' + ${empresas.id_Empresas}}" class="btn btn-warning btn-sm">Editar</a>
+            <form th:action="@{'/vista/eliminar/' + ${empresas.id_Empresas}}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('¿Está seguro que desea eliminar este producto?')">
+                    Eliminar
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </div>
 <script th:src="@{/js/script.js}"></script>
 </body>

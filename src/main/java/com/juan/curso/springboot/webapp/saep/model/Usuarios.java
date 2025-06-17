@@ -3,50 +3,20 @@ package com.juan.curso.springboot.webapp.saep.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios")
-public class Usuarios {
-
+@Table(name="usuarios")
+public class Usuarios
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuarios;
-    private String tipo_dc;
-    private String numero;
-    private String nombres;
-    private String apellidos;
-    private String email;
-    private String email_insti;
-    private String direccion;
-    private String contacto1;
-    private String contacto2;
-    private String clave;
-    private String estado;
 
-    // SOLUCIÓN: Usar @ManyToOne con insertable=true, updatable=true
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol", insertable = true, updatable = true)
-    private Rol rol;
+    private String tipo_dc, numero, nombres, apellidos, email, email_insti, direccion, contacto1, contacto2, clave, estado;
 
-    // Método auxiliar para obtener el id_rol como Integer (para compatibilidad con el HTML)
-    public Integer getId_rol() {
-        if (rol != null && rol.getId_rol() != null) {
-            return rol.getId_rol().intValue(); // Convertir Long a Integer
-        }
-        return null;
-    }
+    @ManyToOne
+    @JoinColumn(name="id_rol")
+    private Rol idRol;
 
-    // Método auxiliar para establecer el rol por ID (recibe Integer desde el HTML)
-    public void setId_rol(Integer id_rol) {
-        if (id_rol != null) {
-            // Crear un objeto Rol temporal solo con el ID
-            Rol rolTemp = new Rol();
-            rolTemp.setId_rol(id_rol.longValue()); // Convertir Integer a Long
-            this.rol = rolTemp;
-        } else {
-            this.rol = null;
-        }
-    }
 
-    // Getters y Setters originales
     public Long getId_usuarios() {
         return id_usuarios;
     }
@@ -142,13 +112,12 @@ public class Usuarios {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-  
-    public Rol getRol() {
-        return rol;
+
+    public Rol getIdRol() {
+        return idRol;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setIdRol(Rol idRol) {
+        this.idRol = idRol;
     }
 }
-
