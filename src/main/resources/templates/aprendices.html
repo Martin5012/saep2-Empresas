@@ -66,11 +66,11 @@
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="aprendices : ${aprendices}">
             <td th:text="${aprendices.id_aprendices}"></td>
-            <td th:text="${aprendices.idUsuarios.nombres+' '+ aprendices.idUsuarios.apellidos}"></td>
-            <td th:text="${aprendices.idFichas.codigo}"></td>
-            <td th:text="${aprendices.idEmpresas.nombre}"></td>
-            <td th:text="${aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos}"></td>
-            <td th:text="${aprendices.idModalidades.modalidades}"></td>
+            <td th:text="${aprendices.idUsuarios != null ? aprendices.idUsuarios.nombres + ' ' + aprendices.idUsuarios.apellidos : 'Sin usuario'}"></td>
+            <td th:text="${aprendices.idFichas != null ? aprendices.idFichas.codigo : 'Sin Codigo'}"></td>
+            <td th:text="${aprendices.idEmpresas != null ? aprendices.idEmpresas.nombre : 'Sin Empresa'}"></td>
+            <td th:text="${aprendices.idInstructor != null ? aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos : 'Sin Instructor'}"></td>
+            <td th:text="${aprendices.idModalidades != null ? aprendices.idModalidades.modalidades : 'Sin Modalidad'}"></td>
             <td th:text="${aprendices.estado}"></td>
             <td>
                 <a th:href="@{'/vistaa/editar/' + ${aprendices.id_aprendices}}" class="btn btn-warning btn-sm">Editar</a>

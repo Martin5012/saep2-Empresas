@@ -8,43 +8,52 @@ import com.juan.curso.springboot.webapp.saep.repository.SedesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller // Este controlador devuelve páginas HTML
+@Controller
+@RequestMapping // Opcional: Agregar RequestMapping si es necesario
 public class VistaFichas {
     @Autowired
     private FichasRepository fichasRepository;
+
+    @Autowired // Agregar anotación @Autowired
     private SedesRepository sedesRepository;
+
+    @Autowired // Agregar anotación @Autowired
     private ProgramasRepository programasRepository;
 
     @GetMapping("/vista/fichas")
     public String listar(Model model) {
-        model.addAttribute("fichas", fichasRepository.findAll()); // Envía los productos a la vista
-        return "fichas"; // Devuelve la plantilla productos.html
+        System.out.println("Accediendo a /vista/fichas"); // Debug
+        model.addAttribute("fichas", fichasRepository.findAll());
+        return "fichas";
     }
+
     @GetMapping("/vistaf/form")
     public String formulario(Model model) {
-        model.addAttribute("fichas", new Fichas()); // Objeto vacío para el formulario
-        model.addAttribute("sede", sedesRepository.findAll()); // Objeto vacío para el formulario
-        model.addAttribute("programas", programasRepository.findAll()); // Objeto vacío para el formulario
-        return "fichas_form"; // Vista del formulario para crear
+        model.addAttribute("fichas", new Fichas());
+        model.addAttribute("sedes", sedesRepository.findAll()); // Cambiado de "sede" a "sedes"
+        model.addAttribute("programas", programasRepository.findAll());
+        return "fichas_form";
     }
+
     @PostMapping("/vistaf/guardar")
     public String guardar(@ModelAttribute Fichas fichas, RedirectAttributes ra) {
         fichasRepository.save(fichas);
         ra.addFlashAttribute("mensaje", "Ficha guardada exitosamente");
-        return "redirect:/vista/fichas"; // Redirige al listado
+        return "redirect:/vista/fichas";
     }
+
     @GetMapping("/vistaf/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
-       Fichas fichas = fichasRepository.findById(id).orElse(null);
+        Fichas fichas = fichasRepository.findById(id).orElse(null);
         model.addAttribute("fichas", fichas);
-        return "fichas_form"; // Usa la misma vista que para crear
+        model.addAttribute("sedes", sedesRepository.findAll()); // Agregar sedes disponibles
+        model.addAttribute("programas", programasRepository.findAll()); // Agregar programas disponibles
+        return "fichas_form";
     }
+
     @PostMapping("/vistaf/eliminar/{id}")
     public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
         fichasRepository.deleteById(id);

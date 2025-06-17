@@ -8,8 +8,14 @@ public class Empresas
 {
     @Id
     @GeneratedValue(strategy = GenerationType. IDENTITY) // Auto-incremental
+<<<<<<< main
     private Long id_empresas;
     private  Integer id_usuarios;
+=======
+    //Long para reconocerlo como llave primaria
+    private Long id_empresas;
+    private  Integer id_Usuarios;
+>>>>>>> main
     private String nit;
     private String nombre;
     private String direccion;
