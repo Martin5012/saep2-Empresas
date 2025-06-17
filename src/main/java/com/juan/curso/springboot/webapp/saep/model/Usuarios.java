@@ -142,7 +142,7 @@ public class Usuarios {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
+  
     public Rol getRol() {
         return rol;
     }
@@ -151,3 +151,4 @@ public class Usuarios {
         this.rol = rol;
     }
 }
+

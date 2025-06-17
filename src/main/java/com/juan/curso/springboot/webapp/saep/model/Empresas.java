@@ -6,9 +6,10 @@ import jakarta.persistence.*;
 @Table(name="empresas")
 public class Empresas {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-incremental
+    @GeneratedValue(strategy = GenerationType. IDENTITY) // Auto-incremental
+    //Long para reconocerlo como llave primaria
     private Long id_empresas;
-    private Integer id_usuarios;
+    private  Integer id_Usuarios;
     private String nit;
     private String nombre;
     private String direccion;
