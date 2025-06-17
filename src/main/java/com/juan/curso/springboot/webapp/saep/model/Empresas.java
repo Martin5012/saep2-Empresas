@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="empresas")
-public class Empresas
-{
+public class Empresas {
     @Id
     @GeneratedValue(strategy = GenerationType. IDENTITY) // Auto-incremental
     //Long para reconocerlo como llave primaria
@@ -29,12 +28,12 @@ public class Empresas
         this.id_empresas = id_empresas;
     }
 
-    public Integer getId_Usuarios() {
-        return id_Usuarios;
+    public Integer getId_usuarios() {
+        return id_usuarios;
     }
 
-    public void setId_Usuarios(Integer id_Usuarios) {
-        this.id_Usuarios = id_Usuarios;
+    public void setId_usuarios(Integer id_usuarios) {
+        this.id_usuarios = id_usuarios;
     }
 
     public String getNit() {
