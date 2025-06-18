@@ -10,10 +10,41 @@ public class Usuarios
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuarios;
 
-    @ManyToOne
-    @JoinColumn(name="id_rol")
+
+    private String tipo_dc, numero, nombres, apellidos, email, email_insti, direccion, contacto1, contacto2, clave, estado;
+
+//    @ManyToOne
+//    @JoinColumn(name="id_rol")
+//    private Rol idRol;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_rol")
+    private Rol rol;
+
+    // SOLUCIÓN: Usar @ManyToOne con insertable=true, updatable=true para el LOGIN
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_rol", insertable = false, updatable = false)
     private Rol idRol;
-    private String tipo_dc,numero,nombres,apellidos,email,email_insti,direccion,contacto1,contacto2,clave,estado;
+
+    // Método auxiliar para obtener el id_rol como Integer (para compatibilidad con el HTML)
+    public Integer getId_rol() {
+        if (rol != null && rol.getId_rol() != null) {
+            return rol.getId_rol().intValue(); // Convertir Long a Integer
+        }
+        return null;
+    }
+
+    // Método auxiliar para establecer el rol por ID (recibe Integer desde el HTML)
+    public void setId_rol(Integer id_rol) {
+        if (id_rol != null) {
+            // Crear un objeto Rol temporal solo con el ID
+            Rol rolTemp = new Rol();
+            rolTemp.setId_rol(id_rol.longValue()); // Convertir Integer a Long
+            this.rol = rolTemp;
+        } else {
+            this.rol = null;
+        }
+    }
 
     public Long getId_usuarios() {
         return id_usuarios;
@@ -111,11 +142,20 @@ public class Usuarios
         this.estado = estado;
     }
 
+
     public Rol getIdRol() {
         return idRol;
     }
 
     public void setIdRol(Rol idRol) {
         this.idRol = idRol;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }
