@@ -16,10 +16,14 @@ public class Usuarios
 //    @JoinColumn(name="id_rol")
 //    private Rol idRol;
 
-    // SOLUCIÓN: Usar @ManyToOne con insertable=true, updatable=true
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol", insertable = true, updatable = true)
+    @JoinColumn(name = "id_rol")
     private Rol rol;
+
+    // SOLUCIÓN: Usar @ManyToOne con insertable=true, updatable=true para el LOGIN
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_rol", insertable = false, updatable = false)
+    private Rol idRol;
 
     // Método auxiliar para obtener el id_rol como Integer (para compatibilidad con el HTML)
     public Integer getId_rol() {
@@ -138,13 +142,14 @@ public class Usuarios
         this.estado = estado;
     }
 
-//    public Rol getIdRol() {
-//        return idRol;
-//    }
-//
-//    public void setIdRol(Rol idRol) {
-//        this.idRol = idRol;
-//    }
+
+    public Rol getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Rol idRol) {
+        this.idRol = idRol;
+    }
 
     public Rol getRol() {
         return rol;
