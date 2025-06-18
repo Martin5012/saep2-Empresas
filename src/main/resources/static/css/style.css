@@ -393,7 +393,7 @@ a {
 /*========================LOGINNN===========================*/
 
 
-body {
+body.login {
     background-color: #39A900;
     height: 100vh;
     display: flex;
