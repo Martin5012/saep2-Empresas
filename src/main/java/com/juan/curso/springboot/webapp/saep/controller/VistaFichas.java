@@ -1,6 +1,5 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
-import com.juan.curso.springboot.webapp.saep.model.Empresas;
 import com.juan.curso.springboot.webapp.saep.model.Fichas;
 import com.juan.curso.springboot.webapp.saep.repository.FichasRepository;
 import com.juan.curso.springboot.webapp.saep.repository.ProgramasRepository;
