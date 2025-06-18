@@ -1,6 +1,5 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
-import com.juan.curso.springboot.webapp.saep.model.Empresas;
 import com.juan.curso.springboot.webapp.saep.model.Seguimiento;
 import com.juan.curso.springboot.webapp.saep.repository.SeguimientoRepository;
 import com.juan.curso.springboot.webapp.saep.service.SeguimientoService;
@@ -14,8 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class VistaSeguimiento {
