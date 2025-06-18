@@ -10,6 +10,7 @@ public class Usuarios
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuarios;
 
+
     private String tipo_dc, numero, nombres, apellidos, email, email_insti, direccion, contacto1, contacto2, clave, estado;
 
 //    @ManyToOne
@@ -44,7 +45,6 @@ public class Usuarios
             this.rol = null;
         }
     }
-
 
     public Long getId_usuarios() {
         return id_usuarios;

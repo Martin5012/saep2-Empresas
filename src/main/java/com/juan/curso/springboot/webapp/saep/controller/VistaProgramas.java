@@ -7,11 +7,10 @@ import com.juan.curso.springboot.webapp.saep.repository.ProgramasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 public class VistaProgramas
@@ -20,10 +19,20 @@ public class VistaProgramas
     private ProgramasRepository programasRepository;
 
     @GetMapping("/vista/programas")
-    public String listar(Model model) {
-        model.addAttribute("programas", programasRepository.findAll()); // Envía los productos a la vista
-        return "programas"; // Devuelve la plantilla productos.html
+    public String listar(@RequestParam(name = "buscar", required = false) String buscar, Model model) {
+        List<Programas> programas;
+
+        if (buscar != null && !buscar.isEmpty()) {
+            programas = programasRepository.buscarPorCriterio(buscar);
+        } else {
+            programas = programasRepository.findAll();
+        }
+
+        model.addAttribute("programas", programas);
+        model.addAttribute("buscar", buscar);
+        return "programas";
     }
+
 
     @GetMapping("/vistap/form")
     public String formulario(Model model) {
