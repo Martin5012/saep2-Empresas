@@ -54,16 +54,31 @@
             <input type="number" th:field="*{codigo}" class="form-control" required />
         </div>
 
+        <!-- Empresa con filtro -->
         <div class="mb-3">
-            <label class="form-label">Programa</label>
-            <select th:field="*{idProgramas}" class="form-select" required>
-                <option value="" disabled selected>Seleccione un programa</option>
-                <option th:each="programa : ${programas}"
-                        th:value="${programa.id_programas}"
-                        th:text="${programa.nombre}"
-                        th:selected="${fichas.idProgramas != null and fichas.idProgramas.id_programas == programa.id_programas}">
-                </option>
-            </select>
+            <label class="form-label">Programa *</label>
+            <div class="filterable-select-container">
+                <input type="text"
+                       class="filterable-input"
+                       id="empresa-search"
+                       placeholder="Buscar Programa..."
+                       autocomplete="off">
+                <div class="filterable-dropdown" id="empresa-dropdown">
+                    <div th:each="programa : ${programas}"
+                         class="filterable-option"
+                         th:data-value="${programa.id_programas}"
+                         th:data-text="${programa.nombre}"
+                         th:text="${programa.nombre}">
+                    </div>
+                </div>
+                <select th:field="*{idProgramas}" style="display: none;" id="empresa-select" required>
+                    <option value="">Seleccione un Programa</option>
+                    <option th:each="programa : ${programas}"
+                            th:value="${programa.id_programas}"
+                            th:text="${programa.nombre}">
+                    </option>
+                </select>
+            </div>
         </div>
 
         <div class="mb-3">
