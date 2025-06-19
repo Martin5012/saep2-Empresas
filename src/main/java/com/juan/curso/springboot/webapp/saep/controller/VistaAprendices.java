@@ -2,7 +2,7 @@ package com.juan.curso.springboot.webapp.saep.controller;
 
 import com.juan.curso.springboot.webapp.saep.model.Aprendices;
 import com.juan.curso.springboot.webapp.saep.model.Fichas;
-import com.juan.curso.springboot.webapp.saep.repository.*;
+import com.juan.curso.springboot.webapp.saep.repository.AprendicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +17,6 @@ public class VistaAprendices
 {
     @Autowired
     private AprendicesRepository aprendicesRepository;
-    @Autowired
-    private UsuariosRepository usuariosRepository;
-    @Autowired
-    private FichasRepository fichasRepository;
-    @Autowired
-    private ModalidadRepository modalidadRepository;
-    @Autowired
-    private EmpresasRepository empresasRepository;
 
     @GetMapping("/vista/aprendices")
     public String listar(Model model) {
@@ -33,12 +25,14 @@ public class VistaAprendices
     }
     @GetMapping("/vistaa/form")
     public String formulario(Model model) {
+
         model.addAttribute("aprendices", new Aprendices());
         model.addAttribute("usuarios", usuariosRepository.findAll()); // Solo instructores
         model.addAttribute("fichas", fichasRepository.findAll());
         model.addAttribute("modalidad", modalidadRepository.findAll());
         model.addAttribute("empresas", empresasRepository.findAll());
         return "aprendices_form";
+
     }
     @PostMapping("/vistaa/guardar")
     public String guardar(@ModelAttribute Aprendices aprendices, RedirectAttributes ra) {
@@ -49,10 +43,6 @@ public class VistaAprendices
     @GetMapping("/vistaa/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         Aprendices aprendices = aprendicesRepository.findById(id).orElse(null);
-        model.addAttribute("usuarios", usuariosRepository.findAll()); // Objeto vacío para el formulario
-        model.addAttribute("fichas", fichasRepository.findAll()); // Objeto vacío para el formulario
-        model.addAttribute("modalidad", modalidadRepository.findAll()); // Objeto vacío para el formulario
-        model.addAttribute("empresas", empresasRepository.findAll()); // Objeto vacío para el formulario
         model.addAttribute("aprendices", aprendices);
         return "aprendices_form"; // Usa la misma vista que para crear
     }

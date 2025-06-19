@@ -26,13 +26,15 @@
         <a class="nav-link text-white" th:href="@{/vista/aprendices}">📋 Aprendices</a>
         <a class="nav-link text-white" th:href="@{/vista/fichas}">📋 Fichas</a>
         <a class="nav-link text-white" th:href="@{/vista/empresas}">🏢 Empresas</a>
-        <a class="nav-link text-white" th:href="@{/vista/modalidad}">⚔️ Modalidad</a>
+        <a class="nav-link text-white" th:href="@{/vista/modalidades}">⚔️ Modalidad</a>
         <a class="nav-link text-white" th:href="@{/vista/novedades}">💾 Novedades</a>
         <a class="nav-link text-white" th:href="@{/vista/programas}">🛠️ Programas</a>
         <a class="nav-link text-white" th:href="@{/vista/rol}">📎 Roles</a>
         <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
+        <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
+
     </nav>
 </div>
 
@@ -47,6 +49,16 @@
 
     <!-- Botón para ir al formulario -->
     <a th:href="@{/vistau/form}" class="btn btn-success mb-3">Registrar Usuario</a>
+
+    <form class="input-group mb-3" th:action="@{/vista/usuarios}" method="get">
+        <input type="text" name="buscar" class="form-control" placeholder="Buscar usuarios..." th:value="${buscar}" />
+        <button class="btn btn-outline-secondary" type="submit">🔍 Buscar</button>
+    </form>
+
+    <div th:if="${#lists.isEmpty(usuarios)}" class="alert alert-warning">
+        No se encontraron usuarios con ese criterio.
+    </div>
+
 
     <!-- Tabla de productos -->
     <table class="table table-bordered table-striped">
