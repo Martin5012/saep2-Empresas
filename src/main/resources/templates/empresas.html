@@ -15,30 +15,43 @@
 </button>
 
 <!-- Menú lateral fijo -->
-<div id="sidebar"
-     style="background-color: #39A900; min-height: 100vh; width: 220px; position: fixed; top: 0; left: 0; z-index: 1000;">
-
+<!-- Menú lateral con scroll y submenú colapsable en Bootstrap 5 -->
+<div id="sidebar" class="sidebar bg-success text-white">
     <div class="text-center mb-4">
         <img th:src="@{/img/logo_sena_n.png}" alt="Logo SENA" height="100" style="margin-top: 30px;">
     </div>
-
-
 
     <nav class="nav flex-column">
         <a class="nav-link text-white" th:href="@{/vista/aprendices}">📋 Aprendices</a>
         <a class="nav-link text-white" th:href="@{/vista/fichas}">📋 Fichas</a>
         <a class="nav-link text-white" th:href="@{/vista/empresas}">🏢 Empresas</a>
+
+        <!-- Botón de submenú desplegable -->
+        <a class="nav-link text-white" data-bs-toggle="collapse" href="#submenuUsuarios" role="button" aria-expanded="false" aria-controls="submenuUsuarios">
+            👥 Usuarios ▾
+        </a>
+        <div class="collapse" id="submenuUsuarios">
+            <nav class="nav flex-column ms-3">
+                <a class="nav-link text-white" th:href="@{/vista/usuarios}">- Usuario</a>
+                <a class="nav-link text-white" th:href="@{/vista/usuarios/aprendices}">- Ver aprendices</a>
+                <a class="nav-link text-white" th:href="@{/vista/usuarios/evaluadores}">- Ver evaluadores</a>
+                <a class="nav-link text-white" th:href="@{/vista/usuarios/coevaluadores}">- Ver coevaluadores</a>
+                <a class="nav-link text-white" th:href="@{/vista/usuarios/auxiliares}">- Ver auxiliares</a>
+            </nav>
+        </div>
+       
+
         <a class="nav-link text-white" th:href="@{/vista/modalidades}">⚔️ Modalidad</a>
         <a class="nav-link text-white" th:href="@{/vista/novedades}">💾 Novedades</a>
         <a class="nav-link text-white" th:href="@{/vista/programas}">🛠️ Programas</a>
-        <a class="nav-link text-white" th:href="@{/vista/roles}">📎 Roles</a>
+        <a class="nav-link text-white" th:href="@{/vista/rol}">📎 Roles</a>
         <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
-        <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
+
+
     </nav>
-
-
 </div>
+
 
 
 
@@ -103,6 +116,8 @@
         </tbody>
     </table>
 </div>
+<script th:src="@{/js/script.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/script.js}"></script>
 </body>
 </html>

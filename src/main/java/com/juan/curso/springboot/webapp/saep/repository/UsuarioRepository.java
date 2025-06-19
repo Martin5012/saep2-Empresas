@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 public interface UsuarioRepository extends JpaRepository<Usuarios, Long> {
 
     // Método original con JOIN FETCH para cargar la relación
-    @Query("SELECT u FROM Usuarios u LEFT JOIN FETCH u.rol WHERE u.numero = :numero AND u.clave = :clave")
-    Usuarios findByNumeroAndClave(@Param("numero") String numero, @Param("clave") String clave);
+    @Query("SELECT u FROM Usuarios u LEFT JOIN FETCH u.rol WHERE u.email_insti = :email_insti AND u.clave = :clave")
+    Usuarios findByNumeroAndClave(@Param("email_insti") String email_insti, @Param("clave") String clave);
 }
