@@ -1,20 +1,27 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.juan.curso.springboot.webapp.saep.model.Aprendices;
 import com.juan.curso.springboot.webapp.saep.model.Fichas;
 import com.juan.curso.springboot.webapp.saep.model.Rol;
 import com.juan.curso.springboot.webapp.saep.model.Usuarios;
 import com.juan.curso.springboot.webapp.saep.repository.*;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.InputStream;
 import java.util.List;
 
 @Controller
@@ -122,5 +129,196 @@ public class VistaAprendices
         List<Usuarios> coevaluadores = usuariosRepository.findByRol(coevaluadorRol);
         model.addAttribute("usuarios", coevaluadores);
         return "formulario-aprendices";
+    }
+
+    @GetMapping("/vistaa/asignacion")
+    public String asignacion(@RequestParam(value = "idAprendiz", required = false) Long idAprendiz,
+                             @RequestParam(value = "buscar", required = false) String buscar,
+                             Model model) {
+
+        List<Aprendices> aprendices;
+        if (buscar != null && !buscar.isEmpty()) {
+            aprendices = aprendicesRepository.buscarPorCriterio(buscar);
+        } else {
+            aprendices = aprendicesRepository.findAll();
+        }
+
+        model.addAttribute("aprendices", aprendices);
+
+        List<Usuarios> evaluadores = usuariosRepository.findAll().stream()
+                .filter(u -> u.getIdRol() != null
+                        && u.getIdRol().getRoles() != null
+                        && u.getIdRol().getRoles().equalsIgnoreCase("Evaluador")
+                        && u.getEstado() != null
+                        && u.getEstado().equalsIgnoreCase("Activo"))
+                .toList();
+
+        model.addAttribute("evaluadores", evaluadores);
+        model.addAttribute("idAprendizSeleccionado", idAprendiz);
+
+        return "asignacion";
+    }
+
+
+
+
+    @PostMapping("/vistaa/asignar-evaluador") //guardar evaluador en tabla de aprendices, ya sea asignar o reasignar
+    public String asignarEvaluador(@RequestParam("idAprendiz") Long idAprendiz,
+                                   @RequestParam("idInstructor") Integer idInstructor,
+                                   RedirectAttributes redirectAttributes) {
+
+        Aprendices aprendiz = aprendicesRepository.findById(idAprendiz).orElse(null);
+        if (aprendiz != null) {
+            Usuarios instructor = usuariosRepository.findById(Long.valueOf(idInstructor)).orElse(null);
+            if (instructor != null) {
+                aprendiz.setIdInstructor(instructor);
+                aprendicesRepository.save(aprendiz);
+                redirectAttributes.addFlashAttribute("mensaje", "Evaluador asignado correctamente.");
+            }
+        }
+        return "redirect:/vistaa/asignacion";
+    }
+
+    @PostMapping("/vistaa/eliminar-evaluador")
+    public String eliminarEvaluador(@RequestParam("idAprendiz") Long idAprendiz, RedirectAttributes redirectAttributes) {
+        Aprendices aprendiz = aprendicesRepository.findById(idAprendiz).orElse(null);
+
+        if (aprendiz != null) {
+            aprendiz.setIdInstructor(null); // eliminamos el evaluador
+            aprendicesRepository.save(aprendiz);
+            redirectAttributes.addFlashAttribute("mensaje", "Evaluador eliminado correctamente.");
+        } else {
+            redirectAttributes.addFlashAttribute("mensaje", "No se encontró el aprendiz.");
+        }
+
+        return "redirect:/vistaa/asignacion";
+    }
+
+    @GetMapping("/vistaA/pdf")
+    public void exportarPDF(HttpServletResponse response) throws Exception {
+        String nombreArchivo = "Aprendices.pdf";
+        Document document = new Document(PageSize.A4, 25 , 25, 62, 65);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
+
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        // Agregar imagen de fondo
+        try {
+            InputStream imageStream = new ClassPathResource("static/img/plantillaPDF.jpg").getInputStream();
+            Image background = Image.getInstance(imageStream.readAllBytes());
+
+            background.setAbsolutePosition(0, 0);
+            background.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+            writer.getDirectContentUnder().addImage(background);
+        }
+        catch (Exception e)
+        {
+            System.out.println("No se pudo cargar la imagen de fondo: " + e.getMessage());
+        }
+
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD, new BaseColor(255, 255, 255));
+        Paragraph title = new Paragraph("Listado de Aprendices", titleFont);
+        title.setAlignment(Paragraph.ALIGN_LEFT);
+
+        document.add(title);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(7);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10);
+
+        // Encabezados
+        table.addCell("ID");
+        table.addCell("Usuario");
+        table.addCell("Fichas");
+        table.addCell("Empresas");
+        table.addCell("Instructor");
+        table.addCell("Modalidad");
+        table.addCell("Estado");
+
+        List<Aprendices> aprendices = aprendicesRepository.findAll();
+
+        for (Aprendices f : aprendices) {
+            table.addCell(String.valueOf(f.getId_aprendices()));
+            table.addCell(
+                    f.getIdUsuarios() != null
+                            ? f.getIdUsuarios().getNombres() + " " + f.getIdUsuarios().getApellidos()
+                            : "N/A"
+            );
+            table.addCell(
+                    f.getIdFichas() != null
+                            ? f.getIdFichas().getCodigo()
+                            : "N/A"
+            );
+            table.addCell(
+                    f.getIdEmpresas() != null
+                            ? f.getIdEmpresas().getNombre()
+                            : "N/A"
+            );
+            table.addCell(
+                    f.getIdInstructor() != null
+                            ? f.getIdInstructor().getNombres() + " " + f.getIdInstructor().getApellidos()
+                            : "N/A"
+            );
+            table.addCell(
+                    f.getIdModalidades() != null
+                            ? f.getIdModalidades().getModalidades()
+                            : "N/A"
+            );
+            table.addCell(
+                    f.getEstado() != null
+                            ? f.getEstado()
+                            : "N/A"
+            );
+        }
+
+        document.add(table);
+        document.close();
+    }
+
+    @GetMapping("/vistaA/excel")
+    public void exportarExcel(HttpServletResponse response) throws Exception {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=Aprendices.xlsx");
+
+        List<Aprendices> aprendices = aprendicesRepository.findAll(); // Reemplaza con tu repositorio
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Aprendices");
+
+        // Crear encabezado
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("ID");
+        headerRow.createCell(1).setCellValue("Usuarios");
+        headerRow.createCell(2).setCellValue("Fichas");
+        headerRow.createCell(3).setCellValue("Empresas");
+        headerRow.createCell(4).setCellValue("Instructor");
+        headerRow.createCell(5).setCellValue("Modalidad");
+        headerRow.createCell(6).setCellValue("Estado");
+
+        // Agregar datos
+        int rowNum = 1;
+        for (Aprendices f : aprendices) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(f.getId_aprendices());
+            row.createCell(1).setCellValue(f.getIdUsuarios().getNombres() + " " + f.getIdUsuarios().getApellidos());
+            row.createCell(2).setCellValue(f.getIdFichas().getCodigo());
+            row.createCell(3).setCellValue(f.getIdEmpresas().getNombre());
+            row.createCell(4).setCellValue(f.getIdInstructor().getNombres() + " " + f.getIdInstructor().getApellidos());
+            row.createCell(5).setCellValue(f.getIdModalidades().getModalidades());
+            row.createCell(6).setCellValue(f.getEstado());
+        }
+
+        // Autoajustar columnas
+        for (int i = 0; i < 7; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }

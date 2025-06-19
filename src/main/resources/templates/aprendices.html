@@ -47,6 +47,15 @@
 
     <!-- Botón para ir al formulario -->
     <a th:href="@{/vistaa/form}" class="btn btn-success mb-3">Registrar Aprendiz</a>
+    <a href="/vistaa/asignacion" class="btn btn-outline-success mb-3">📒 Asignación</a>
+    <a href="/vistaA/pdf" class="btn btn-outline-danger mb-3">📄 Exportar a PDF</a>
+    <a href="/vistaA/excel" class="btn btn-outline-danger mb-3">📊  Exportar a Excel</a>
+
+
+    <form class="input-group mb-3" th:action="@{/vistaA/aprendices}" method="get">
+        <input type="text" name="buscar" class="form-control" placeholder="Buscar..." />
+        <button class="btn btn-outline-secondary" type="submit">🔍 Buscar</button>
+    </form>
 
     <!-- Tabla de productos -->
     <table class="table table-bordered table-striped">
