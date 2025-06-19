@@ -41,14 +41,23 @@
 <!-- Contenido principal -->
 <div style="padding: 20px;">
 
-    <!-- Título -->
-    <h1 class="text-success">Lista de Seguimiento</h1>
+    <!-- Título Dinamico-->
+    <h1 class="text-success" th:if="${#strings.equals(tipoActual, '147')}">Bitácoras</h1>
+    <h1 class="text-success" th:if="${#strings.equals(tipoActual, '023')}">Seguimiento</h1>
+    <h1 class="text-success" th:if="${tipoActual == null}">Lista de Seguimiento</h1>
 
     <!-- Mensaje flash si se guarda o elimina un producto -->
     <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
 
+    <!-- Botón para volver -->
+    <a th:href="@{/vista/aprendiz}" class="btn btn-secondary mb-3">← Volver a Aprendiz</a>
+
+    <!-- Botón para exportar PDF -->
+    <a th:href="@{'/vistase/pdf?tipo=' + ${tipoActual}}" class="btn btn-danger mb-3">📄 Exportar PDF</a>
+
     <!-- Botón para ir al formulario -->
-    <a th:href="@{/vistase/form}" class="btn btn-success mb-3">Subir PDF</a>
+    <a th:if="${#strings.equals(tipoActual, '023')}" th:href="@{/vistase/form2}" class="btn btn-success mb-3">Subir PDF</a>
+    <a th:unless="${#strings.equals(tipoActual, '023')}" th:href="@{/vistase/form}" class="btn btn-success mb-3">Subir PDF</a>
 
     <!-- Tabla de productos -->
     <table class="table table-bordered table-striped">
@@ -70,16 +79,22 @@
             <td th:text="${seguimiento.fecha}"></td>
             <td th:text="${seguimiento.observaciones}"></td>
             <td th:text="${seguimiento.nombreUsuario}"></td>
-            
+
             <td>
-                <a th:href="@{'/' + ${seguimiento.archivo}}" class="btn btn-success btn-sm" target="_blank">Visualizar</a>
-                <a th:href="@{'/vistase/editar/' + ${seguimiento.id_seguimiento}}" class="btn btn-warning btn-sm">Editar</a>
-                <form th:action="@{'/vistase/eliminar/' + ${seguimiento.id_seguimiento}}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('¿Está seguro que desea eliminar este formato?')">
-                        Eliminar
-                    </button>
-                </form>
+                <div class="d-flex gap-2">
+                    <a th:href="@{'/' + ${seguimiento.archivo}}" class="btn btn-success btn-sm" target="_blank">Visualizar</a>
+                    <a th:href="@{'/vistase/editar/' + ${seguimiento.id_seguimiento}}" class="btn btn-warning btn-sm">Editar</a>
+                    <form th:action="@{'/vistase/eliminar/' + ${seguimiento.id_seguimiento}}" method="post">
+
+                        <input type="hidden" name="tipo" th:value="${tipoActual}" />
+
+
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Está seguro que desea eliminar este formato?')">
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         </tbody>

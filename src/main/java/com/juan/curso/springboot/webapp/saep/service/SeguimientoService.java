@@ -19,7 +19,18 @@ public class SeguimientoService {
                 .map(obj -> {
                     Seguimiento s = (Seguimiento) obj[0];
                     String nombreCompleto = (String) obj[1];
-                    s.setNombreUsuario(nombreCompleto);  // ahora contiene "Juan Pérez"
+                    s.setNombreUsuario(nombreCompleto);  // ahora contiene ejemplo "Juan Pérez"
+                    return s;
+                }).collect(Collectors.toList());
+    }
+
+    public List<Seguimiento> obtenerPorTipoYUsuario(String tipo, Long idUsuario) {
+        return seguimientoRepository.findSeguimientosConNombreUsuarioByTipoAndUsuario(tipo, idUsuario)
+                .stream()
+                .map(obj -> {
+                    Seguimiento s = (Seguimiento) obj[0];
+                    String nombreCompleto = (String) obj[1];
+                    s.setNombreUsuario(nombreCompleto);
                     return s;
                 }).collect(Collectors.toList());
     }

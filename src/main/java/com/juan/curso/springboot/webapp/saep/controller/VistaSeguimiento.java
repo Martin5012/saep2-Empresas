@@ -1,9 +1,20 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.juan.curso.springboot.webapp.saep.model.Seguimiento;
 import com.juan.curso.springboot.webapp.saep.repository.SeguimientoRepository;
 import com.juan.curso.springboot.webapp.saep.service.SeguimientoService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +23,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class VistaSeguimiento {
@@ -24,8 +40,26 @@ public class VistaSeguimiento {
     private SeguimientoService seguimientoService;
 
     @GetMapping("/vista/seguimiento")
-    public String listar(Model model) {
-        model.addAttribute("seguimiento", seguimientoService.obtenerConNombreUsuario());
+    public String listarPorTipoYUsuario(@RequestParam(value = "tipo", required = false) String tipo,
+                                        HttpSession session,
+                                        Model model) {
+
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogueado");
+        if (idUsuario == null) return "redirect:/login";
+
+        List<Seguimiento> filtrados;
+        if (tipo != null) {
+            filtrados = seguimientoService.obtenerPorTipoYUsuario(tipo, idUsuario);
+        } else {
+            filtrados = seguimientoService.obtenerConNombreUsuario() // o una versión que también filtre por id
+                    .stream()
+                    .filter(s -> idUsuario.equals(s.getId_usuarios()))
+                    .toList();
+        }
+
+        model.addAttribute("seguimiento", filtrados);
+        model.addAttribute("tipoActual", tipo);
+
         return "seguimiento";
     }
 
@@ -45,30 +79,29 @@ public class VistaSeguimiento {
     @PostMapping("/vistase/guardar")
     public String guardar(@RequestParam("archivoPdf") MultipartFile archivo,
                           @RequestParam("observaciones") String observaciones,
-                          @RequestParam("id_usuarios") Integer idUsuarios,
+                          HttpSession session,
                           RedirectAttributes ra) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogueado");
+
+        if (idUsuario == null) return "redirect:/login";
 
         try {
-            // 1. Ruta donde se guardará el archivo en el servidor
             String nombreArchivo = archivo.getOriginalFilename();
-            String rutaRelativa = "uploads/" + nombreArchivo;
-            String rutaAbsoluta = new File("src/main/resources/static/" + rutaRelativa).getAbsolutePath();
+            String rutaBase = System.getProperty("user.dir") + "/uploads/";
+            String rutaAbsoluta = rutaBase + nombreArchivo;
 
-            // 2. Guardar el archivo en esa ruta
             File destino = new File(rutaAbsoluta);
             archivo.transferTo(destino);
 
-            // 3. Crear el seguimiento con la ruta del archivo
             Seguimiento seguimiento = new Seguimiento();
             seguimiento.setNombre_archivo(nombreArchivo);
-            seguimiento.setArchivo(rutaRelativa); // << solo la ruta relativa
+            seguimiento.setArchivo("uploads/" + nombreArchivo);
             seguimiento.setTipo_formato("147");
             seguimiento.setObservaciones(observaciones);
-            seguimiento.setId_usuarios(idUsuarios);
-            seguimiento.setId_aprendices(idUsuarios);
-            seguimiento.setFecha(LocalDateTime.now().toString()); // opcional
+            seguimiento.setId_usuarios(idUsuario.intValue());
+            seguimiento.setId_aprendices(idUsuario.intValue());
+            seguimiento.setFecha(LocalDateTime.now().toString());
 
-            // valores por defecto si no usas los val1, val2, val3 aún
             seguimiento.setVal1("No Aprobado");
             seguimiento.setVal2("No Aprobado");
             seguimiento.setVal3("No Aprobado");
@@ -80,36 +113,35 @@ public class VistaSeguimiento {
             e.printStackTrace();
         }
 
-        return "redirect:/vista/seguimiento";
+        return "redirect:/vista/seguimiento?tipo=147";
     }
 
     @PostMapping("/vistase/guardar2")
     public String guardar2(@RequestParam("archivoPdf") MultipartFile archivo,
                           @RequestParam("observaciones") String observaciones,
-                          @RequestParam("id_usuarios") Integer idUsuarios,
+                          HttpSession session,
                           RedirectAttributes ra) {
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogueado");
+
+        if (idUsuario == null) return "redirect:/login";
 
         try {
-            // 1. Ruta donde se guardará el archivo en el servidor
             String nombreArchivo = archivo.getOriginalFilename();
-            String rutaRelativa = "uploads/" + nombreArchivo;
-            String rutaAbsoluta = new File("src/main/resources/static/" + rutaRelativa).getAbsolutePath();
+            String rutaBase = System.getProperty("user.dir") + "/uploads/";
+            String rutaAbsoluta = rutaBase + nombreArchivo;
 
-            // 2. Guardar el archivo en esa ruta
             File destino = new File(rutaAbsoluta);
             archivo.transferTo(destino);
 
-            // 3. Crear el seguimiento con la ruta del archivo
             Seguimiento seguimiento = new Seguimiento();
             seguimiento.setNombre_archivo(nombreArchivo);
-            seguimiento.setArchivo(rutaRelativa); // << solo la ruta relativa
-            seguimiento.setTipo_formato("147");
+            seguimiento.setArchivo("uploads/" + nombreArchivo);
+            seguimiento.setTipo_formato("023");
             seguimiento.setObservaciones(observaciones);
-            seguimiento.setId_usuarios(idUsuarios);
-            seguimiento.setId_aprendices(idUsuarios);
-            seguimiento.setFecha(LocalDateTime.now().toString()); // opcional
+            seguimiento.setId_usuarios(idUsuario.intValue());
+            seguimiento.setId_aprendices(idUsuario.intValue());
+            seguimiento.setFecha(LocalDateTime.now().toString());
 
-            // valores por defecto si no usas los val1, val2, val3 aún
             seguimiento.setVal1("No Aprobado");
             seguimiento.setVal2("No Aprobado");
             seguimiento.setVal3("No Aprobado");
@@ -121,49 +153,133 @@ public class VistaSeguimiento {
             e.printStackTrace();
         }
 
-        return "redirect:/vista/seguimiento";
+        return "redirect:/vista/seguimiento?tipo=023";
     }
 
     @GetMapping("/vistase/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         Seguimiento seguimiento = seguimientoRepository.findById(id).orElse(null);
         model.addAttribute("seguimiento", seguimiento);
-        return "seguimiento_form_editar"; // Usa la misma vista que para crear
+
+        if (seguimiento != null) {
+            model.addAttribute("tipoActual", seguimiento.getTipo_formato());
+        }
+
+        return "seguimiento_form_editar";
     }
 
     @PostMapping("/vistase/guardar_editar")
-    public String guardarEditar(@ModelAttribute Seguimiento seguimiento,
-                                @RequestParam(value = "archivoPdf", required = false) MultipartFile archivo,
+    public String guardarEditar(@RequestParam("id_seguimiento") Long id,
+                                @RequestParam("observaciones") String observaciones,
+                                @RequestParam("tipo") String tipo,
                                 RedirectAttributes ra) {
 
-        try {
-            if (archivo != null && !archivo.isEmpty()) {
-                String nombreArchivo = archivo.getOriginalFilename();
-                String rutaRelativa = "uploads/" + nombreArchivo;
-                String rutaAbsoluta = new File("src/main/resources/static/" + rutaRelativa).getAbsolutePath();
+        Seguimiento seguimiento = seguimientoRepository.findById(id).orElse(null);
 
-                File destino = new File(rutaAbsoluta);
-                archivo.transferTo(destino);
-
-                seguimiento.setNombre_archivo(nombreArchivo);
-                seguimiento.setArchivo(rutaRelativa);
-            }
-
+        if (seguimiento != null) {
+            seguimiento.setObservaciones(observaciones);
             seguimientoRepository.save(seguimiento);
-            ra.addFlashAttribute("mensaje", "Seguimiento actualizado correctamente.");
-        } catch (IOException e) {
-            ra.addFlashAttribute("mensaje", "Error al subir el nuevo archivo.");
-            e.printStackTrace();
+            ra.addFlashAttribute("mensaje", "Observación actualizada correctamente.");
+        } else {
+            ra.addFlashAttribute("mensaje", "Error: seguimiento no encontrado.");
         }
 
-        return "redirect:/vista/seguimiento";
+        return "redirect:/vista/seguimiento?tipo=" + tipo;
     }
 
     @PostMapping("/vistase/eliminar/{id}")
-    public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
+    public String eliminar(@PathVariable Long id,
+                           @RequestParam("tipo") String tipo,
+                           RedirectAttributes ra) {
+
         seguimientoRepository.deleteById(id);
         ra.addFlashAttribute("mensaje", "Formato eliminado exitosamente");
-        return "redirect:/vista/seguimiento";
+
+        // 🔁 redirección dinámica
+        return "redirect:/vista/seguimiento?tipo=" + tipo;
+    }
+
+    @GetMapping("/vistase/pdf")
+    public void exportarPDF(@RequestParam(value = "tipo", required = false) String tipo,
+                            HttpServletResponse response,
+                            HttpSession session) throws Exception {
+
+        Long idUsuario = (Long) session.getAttribute("idUsuarioLogueado");
+        if (idUsuario == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        String nombreArchivo = "Seguimiento.pdf";
+        Document document = new Document(PageSize.A4, 25, 25, 62, 65);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
+
+        PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        try {
+            InputStream imageStream = new ClassPathResource("static/img/plantillaPDF.jpg").getInputStream();
+            Image background = Image.getInstance(imageStream.readAllBytes());
+            background.setAbsolutePosition(0, 0);
+            background.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+            writer.getDirectContentUnder().addImage(background);
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de fondo: " + e.getMessage());
+        }
+
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, Font.BOLD, BaseColor.WHITE);
+        Paragraph title = new Paragraph("Listado de Seguimientos", titleFont);
+        title.setAlignment(Paragraph.ALIGN_LEFT);
+        document.add(title);
+        document.add(new Paragraph(" "));
+
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10);
+
+        table.addCell("Nombre archivo");
+        table.addCell("Tipo Formato");
+        table.addCell("Fecha");
+        table.addCell("Observaciones");
+        table.addCell("Subido por");
+
+        List<Seguimiento> seguimientos;
+        if (tipo != null) {
+            seguimientos = seguimientoService.obtenerPorTipoYUsuario(tipo, idUsuario);
+        } else {
+            seguimientos = seguimientoService.obtenerConNombreUsuario()
+                    .stream()
+                    .filter(s -> idUsuario.equals(s.getId_usuarios()))
+                    .toList();
+        }
+
+        for (Seguimiento s : seguimientos) {
+            table.addCell(s.getNombre_archivo());
+            table.addCell(s.getTipo_formato());
+            table.addCell(s.getFecha());
+            table.addCell(s.getObservaciones());
+            table.addCell(s.getNombreUsuario() != null ? s.getNombreUsuario() : "N/A");
+        }
+
+        document.add(table);
+        document.close();
+    }
+
+    @GetMapping("/uploads/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> verArchivo(@PathVariable String filename) throws IOException {
+        Path archivo = Paths.get(System.getProperty("user.dir") + "/uploads/").resolve(filename);
+        Resource resource = new UrlResource(archivo.toUri());
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new RuntimeException("No se pudo leer el archivo: " + filename);
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 
 
