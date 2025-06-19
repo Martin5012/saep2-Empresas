@@ -1,6 +1,5 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
-import com.juan.curso.springboot.webapp.saep.model.Empresas;
 import com.juan.curso.springboot.webapp.saep.model.Rol;
 import com.juan.curso.springboot.webapp.saep.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;

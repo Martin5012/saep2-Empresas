@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${rol.id_rol == null} ? 'Nuevo Producto' : 'Editar Producto'">Formulario de Roles</title>
+    <title>Lista de Modalidades</title>
     <!-- Bootstrap CSS desde CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!--  CSS desde local -->
@@ -41,24 +41,41 @@
 <!-- Contenido principal -->
 <div style="padding: 20px;">
 
-    <!-- Título dinámico -->
-    <h1 class="text-success" th:text="${rol.id_rol == null} ? 'Registrar Rol' : 'Editar Rol'"></h1>
+    <!-- Título -->
+    <h1 class="text-success">Lista de Modalidades</h1>
 
-    <!-- Formulario de guardado -->
-    <form th:action="@{/vistar/guardar}" th:object="${rol}" method="post" novalidate>
-        <!-- Campo oculto para conservar el ID al editar -->
-        <input type="hidden" th:field="*{id_rol}" />
+    <!-- Mensaje flash si se guarda o elimina un producto -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
 
-        <div class="mb-3">
-            <label class="form-label">Roles</label>
-            <input type="text" th:field="*{roles}" class="form-control" required />
-        </div>
+    <!-- Botón para ir al formulario -->
+    <a th:href="@{/vistam/form}" class="btn btn-success mb-3">Registrar Modalidad</a>
 
-
-        <!-- Botones -->
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <a th:href="@{/vista/rol}" class="btn btn-secondary">Volver</a>
-    </form>
+    <!-- Tabla de productos -->
+    <table class="table table-bordered table-striped">
+        <thead class="table-success">
+        <tr>
+            <th>ID Modalidad</th>
+            <th>Modalidades</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Itera sobre la lista de productos enviada desde el controlador -->
+        <tr th:each="modalidad : ${modalidad}">
+            <td th:text="${modalidad.id_modalidad}"></td>
+            <td th:text="${modalidad.modalidades}"></td>
+            <td>
+                <a th:href="@{'/vistam/editar/' + ${modalidad.id_modalidad}}" class="btn btn-warning btn-sm">Editar</a>
+                <form th:action="@{'/vistam/eliminar/' + ${modalidad.id_modalidad}}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Está seguro que desea eliminar este producto?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <script th:src="@{/js/script.js}"></script>
 </body>
