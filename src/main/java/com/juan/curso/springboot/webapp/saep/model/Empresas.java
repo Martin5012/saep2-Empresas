@@ -9,8 +9,11 @@ public class Empresas
     @Id
     @GeneratedValue(strategy = GenerationType. IDENTITY) // Auto-incremental
     private Long id_empresas;
-    private  Integer id_usuarios;
-    //Long para reconocerlo como llave primaria
+    @ManyToOne
+    @JoinColumn (name = "id_usuarios")
+    private Usuarios id_usuarios;
+
+
     private String nit;
     private String nombre;
     private String direccion;
@@ -29,11 +32,11 @@ public class Empresas
         this.id_empresas = id_empresas;
     }
 
-    public Integer getId_usuarios() {
+    public Usuarios getId_usuarios() {
         return id_usuarios;
     }
 
-    public void setId_usuarios(Integer id_usuarios) {
+    public void setId_usuarios(Usuarios id_usuarios) {
         this.id_usuarios = id_usuarios;
     }
 

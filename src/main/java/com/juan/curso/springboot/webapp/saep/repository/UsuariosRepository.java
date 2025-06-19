@@ -1,5 +1,6 @@
 package com.juan.curso.springboot.webapp.saep.repository;
 
+import com.juan.curso.springboot.webapp.saep.model.Rol;
 import com.juan.curso.springboot.webapp.saep.model.Usuarios;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +15,6 @@ public interface UsuariosRepository extends JpaRepository<Usuarios,Long> {
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :criterio, '%'))")
     List<Usuarios> buscarPorCriterio(@Param("criterio") String criterio);
 
+    List<Usuarios> findByRol(Rol rol);
 
 }

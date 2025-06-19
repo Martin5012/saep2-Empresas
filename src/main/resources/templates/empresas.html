@@ -28,15 +28,13 @@
         <a class="nav-link text-white" th:href="@{/vista/aprendices}">📋 Aprendices</a>
         <a class="nav-link text-white" th:href="@{/vista/fichas}">📋 Fichas</a>
         <a class="nav-link text-white" th:href="@{/vista/empresas}">🏢 Empresas</a>
-        <a class="nav-link text-white" th:href="@{/vista/modalidades}">⚔️ Modalidad</a>
+        <a class="nav-link text-white" th:href="@{/vista/modalidad}">⚔️ Modalidad</a>
         <a class="nav-link text-white" th:href="@{/vista/novedades}">💾 Novedades</a>
         <a class="nav-link text-white" th:href="@{/vista/programas}">🛠️ Programas</a>
-        <a class="nav-link text-white" th:href="@{/vista/rol}">📎 Roles</a>
+        <a class="nav-link text-white" th:href="@{/vista/roles}">📎 Roles</a>
         <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
-        <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
-
     </nav>
 
 
@@ -86,7 +84,7 @@
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="empresas : ${empresas}">
             <td th:text="${empresas.id_empresas}"></td>
-            <td th:text="${empresas.id_usuarios}"></td>
+            <td th:text="${empresas.id_usuarios != null ? empresas.id_usuarios.nombres : 'Sin usuario'}"></td>
             <td th:text="${empresas.nit}"></td>
             <td th:text="${empresas.nombre}"></td>
             <td th:text="${empresas.direccion}"></td>

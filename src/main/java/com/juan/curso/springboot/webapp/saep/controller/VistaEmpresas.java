@@ -1,12 +1,13 @@
 package com.juan.curso.springboot.webapp.saep.controller;
-
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import java.util.List;
 import java.io.InputStream;
-import java.sql.*;
 import com.juan.curso.springboot.webapp.saep.model.Empresas;
+import com.juan.curso.springboot.webapp.saep.model.Rol;
+import com.juan.curso.springboot.webapp.saep.model.Usuarios;
 import com.juan.curso.springboot.webapp.saep.repository.EmpresasRepository;
+import com.juan.curso.springboot.webapp.saep.repository.RolRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -21,11 +22,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.juan.curso.springboot.webapp.saep.repository.UsuariosRepository;
+
 
 @Controller // Este controlador devuelve páginas HTML
 public class VistaEmpresas {
     @Autowired
     private EmpresasRepository empresasRepository;
+    @Autowired
+    private UsuariosRepository usuariosRepository;
+    @Autowired
+    private RolRepository rolRepository;
 
     @GetMapping("/vista/empresas")
     public String listar(Model model) {
@@ -34,8 +41,13 @@ public class VistaEmpresas {
     }
     @GetMapping("/vista/form")
     public String formulario(Model model) {
-        model.addAttribute("empresas", new Empresas()); // Objeto vacío para el formulario
-        return "empresas_form"; // Vista del formulario para crear
+        Rol coevaluadorRol = rolRepository.findById(3L).orElse(null);
+        List<Usuarios> coevaluadores = usuariosRepository.findByRol(coevaluadorRol);
+
+        model.addAttribute("empresas", new Empresas());
+        model.addAttribute("usuarios", coevaluadores); // Envía los coevaluadores al combo
+
+        return "empresas_form";
     }
     @PostMapping("/vista/guardar")
     public String guardar(@ModelAttribute Empresas empresas, RedirectAttributes ra) {
@@ -56,6 +68,13 @@ public class VistaEmpresas {
         return "redirect:/vista/empresas";
     }
 
+    @GetMapping("/formulario")
+    public String mostrarFormulario(Model model) {
+        Rol coevaluadorRol = rolRepository.findById(3L).orElse(null);
+        List<Usuarios> coevaluadores = usuariosRepository.findByRol(coevaluadorRol);
+        model.addAttribute("usuarios", coevaluadores);
+        return "formulario";
+    }
 
     @GetMapping("/empresas/pdf")
     public void exportarEmpresasPDF(HttpServletResponse response) throws Exception {
@@ -70,7 +89,7 @@ public class VistaEmpresas {
 
         // Imagen de fondo
         try {
-            InputStream imageStream = new ClassPathResource("static/img/plantilllaPDF.jpeg").getInputStream();
+            InputStream imageStream = new ClassPathResource("static/img/plantillaPDF.jpg").getInputStream();
             Image background = Image.getInstance(imageStream.readAllBytes());
             background.setAbsolutePosition(0, 0);
             background.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
@@ -160,7 +179,6 @@ public class VistaEmpresas {
         for (int i = 0; i < 9; i++) {
             sheet.autoSizeColumn(i);
         }
-
         workbook.write(response.getOutputStream());
         workbook.close();
     }
