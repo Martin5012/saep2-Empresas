@@ -53,8 +53,6 @@
         <!-- Input para subir PDF -->
         <input type="file" name="archivoPdf" accept="application/pdf" class="form-control" required>
 
-        <!-- Puedes tener un input oculto para el ID del usuario -->
-        <input type="hidden" name="id_usuarios" value="0"> <!-- O dinámico si tienes login -->
 
         <button type="submit" class="btn btn-primary mt-3">Guardar</button>
         <a th:href="@{/vista/seguimiento(tipo=${'023'})}" class="btn btn-secondary mt-3">Volver</a>

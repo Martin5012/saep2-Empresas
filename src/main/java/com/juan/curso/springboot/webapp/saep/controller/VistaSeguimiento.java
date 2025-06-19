@@ -10,6 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,15 +87,15 @@ public class VistaSeguimiento {
 
         try {
             String nombreArchivo = archivo.getOriginalFilename();
-            String rutaRelativa = "uploads/" + nombreArchivo;
-            String rutaAbsoluta = new File("src/main/resources/static/" + rutaRelativa).getAbsolutePath();
+            String rutaBase = System.getProperty("user.dir") + "/uploads/";
+            String rutaAbsoluta = rutaBase + nombreArchivo;
 
             File destino = new File(rutaAbsoluta);
             archivo.transferTo(destino);
 
             Seguimiento seguimiento = new Seguimiento();
             seguimiento.setNombre_archivo(nombreArchivo);
-            seguimiento.setArchivo(rutaRelativa);
+            seguimiento.setArchivo("uploads/" + nombreArchivo);
             seguimiento.setTipo_formato("147");
             seguimiento.setObservaciones(observaciones);
             seguimiento.setId_usuarios(idUsuario.intValue());
@@ -120,15 +127,15 @@ public class VistaSeguimiento {
 
         try {
             String nombreArchivo = archivo.getOriginalFilename();
-            String rutaRelativa = "uploads/" + nombreArchivo;
-            String rutaAbsoluta = new File("src/main/resources/static/" + rutaRelativa).getAbsolutePath();
+            String rutaBase = System.getProperty("user.dir") + "/uploads/";
+            String rutaAbsoluta = rutaBase + nombreArchivo;
 
             File destino = new File(rutaAbsoluta);
             archivo.transferTo(destino);
 
             Seguimiento seguimiento = new Seguimiento();
             seguimiento.setNombre_archivo(nombreArchivo);
-            seguimiento.setArchivo(rutaRelativa);
+            seguimiento.setArchivo("uploads/" + nombreArchivo);
             seguimiento.setTipo_formato("023");
             seguimiento.setObservaciones(observaciones);
             seguimiento.setId_usuarios(idUsuario.intValue());
@@ -258,6 +265,21 @@ public class VistaSeguimiento {
 
         document.add(table);
         document.close();
+    }
+
+    @GetMapping("/uploads/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> verArchivo(@PathVariable String filename) throws IOException {
+        Path archivo = Paths.get(System.getProperty("user.dir") + "/uploads/").resolve(filename);
+        Resource resource = new UrlResource(archivo.toUri());
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new RuntimeException("No se pudo leer el archivo: " + filename);
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 
 
