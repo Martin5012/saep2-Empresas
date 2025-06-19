@@ -413,3 +413,49 @@ body.login {
     width: 100%;
     max-width: 400px;
 }
+
+.btn-sena {
+    background-color: #39A900;
+    color: white;
+    border: none;
+}
+
+.btn-sena:hover {
+    background-color: #2e8000;
+}
+
+body.login {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url('/img/fondo_login.svg');
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+
+
+
+
+/*========================MENU LATERAL===========================*/
+#sidebar {
+    background-color: #39A900;
+    min-height: 100vh;
+    width: 220px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px 10px;
+}
+
+#sidebar .nav-link {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+}
+
+#sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
