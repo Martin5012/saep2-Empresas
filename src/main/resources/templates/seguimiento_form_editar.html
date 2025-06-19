@@ -45,18 +45,22 @@
     <h1 class="text-success" th:text="${seguimiento.id_seguimiento == null} ? 'Registrar Seguimiento' : 'Editar Seguimiento'"></h1>
 
     <!-- Formulario de guardado -->
-    <form th:action="@{'/vistase/guardar_editar'}" method="post" th:object="${seguimiento}" enctype="multipart/form-data">
-        <input type="hidden" th:field="*{id_seguimiento}" />
+    <form th:action="@{/vistase/guardar_editar}" method="post">
 
+        <!-- ID del seguimiento -->
+        <input type="hidden" name="id_seguimiento" th:value="${seguimiento.id_seguimiento}" />
+
+        <!-- Tipo del formato (para redireccionar) -->
+        <input type="hidden" name="tipo" th:value="${tipoActual}" />
+
+        <!-- Campo editable -->
         <div class="mb-3">
             <label class="form-label">Observaciones</label>
-            <input type="text" th:field="*{observaciones}" class="form-control" required />
+            <input type="text" name="observaciones" th:value="${seguimiento.observaciones}" class="form-control" required />
         </div>
 
-        <input type="hidden" th:field="*{id_usuarios}" />
-
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
-        <a th:href="@{/vista/seguimiento}" class="btn btn-secondary">Volver</a>
+        <a th:href="@{/vista/seguimiento(tipo=${tipoActual})}" class="btn btn-secondary">Volver</a>
     </form>
 </div>
 <script th:src="@{/js/script.js}"></script>

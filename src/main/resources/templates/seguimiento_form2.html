@@ -46,16 +46,18 @@
 
     <!-- Formulario de guardado -->
     <form th:action="@{/vistase/guardar2}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="tipo" th:value="${tipoActual}">
+
         <input type="text" name="observaciones" class="form-control" placeholder="Observaciones" required>
 
         <!-- Input para subir PDF -->
         <input type="file" name="archivoPdf" accept="application/pdf" class="form-control" required>
 
         <!-- Puedes tener un input oculto para el ID del usuario -->
-        <input type="hidden" name="id_usuarios" value="1"> <!-- O dinámico si tienes login -->
+        <input type="hidden" name="id_usuarios" value="0"> <!-- O dinámico si tienes login -->
 
         <button type="submit" class="btn btn-primary mt-3">Guardar</button>
-        <a th:href="@{/vista/seguimiento}" class="btn btn-secondary mt-3">Volver</a>
+        <a th:href="@{/vista/seguimiento(tipo=${'023'})}" class="btn btn-secondary mt-3">Volver</a>
     </form>
 </div>
 <script th:src="@{/js/script.js}"></script>
