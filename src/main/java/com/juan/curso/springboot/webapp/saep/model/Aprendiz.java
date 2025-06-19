@@ -1,40 +1,120 @@
 package com.juan.curso.springboot.webapp.saep.model;
 
 import jakarta.persistence.*;
-
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Entity
-@Table(name="aprendiz")
+@Table(name="aprendices")
 public class Aprendiz {
-    @Id
-    @GeneratedValue(strategy = GenerationType. IDENTITY)
-    private Long id_aprendices;
-    private Integer id_usuarios;
-    private String estado;
-    private Integer id_fichas;
-    private Integer id_empresas;
-    private Integer id_instructor;
-    private Integer id_modalidad;
-    private String nombre;
-    private Integer progreso;
-    private Date fechaInicio;
-    private Date fechaFin;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id_aprendices;
+
+    private String estado;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuarios")
+    private Usuarios usuario;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_fichas")
+    private Fichas ficha;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empresas")
+    private Empresas empresa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_instructor")
+    private Usuarios instructor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_modalidad")
+    private Modalidad modalidad;
+
+    // Método para calcular el progreso basado en las fechas de la ficha
+    public int calcularProgreso() {
+        if (ficha == null || ficha.getFecha_fin_lec() == null || ficha.getFecha_final() == null) {
+            return 0;
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate fechaInicio = LocalDate.parse(ficha.getFecha_fin_lec(), formatter);
+            LocalDate fechaFinal = LocalDate.parse(ficha.getFecha_final(), formatter);
+            LocalDate fechaActual = LocalDate.now();
+
+            // Si aún no ha comenzado
+            if (fechaActual.isBefore(fechaInicio)) {
+                return 0;
+            }
+
+            // Si ya terminó
+            if (fechaActual.isAfter(fechaFinal)) {
+                return 100;
+            }
+
+            // Calcular progreso basado en días transcurridos
+            long diasTotales = ChronoUnit.DAYS.between(fechaInicio, fechaFinal);
+            long diasTranscurridos = ChronoUnit.DAYS.between(fechaInicio, fechaActual);
+
+            if (diasTotales <= 0) {
+                return 0;
+            }
+
+            int progreso = (int) Math.round((double) diasTranscurridos / diasTotales * 100);
+            return Math.min(Math.max(progreso, 0), 100); // Asegurar que esté entre 0 y 100
+
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    // Método para obtener el nombre completo del aprendiz
+    public String getNombreCompleto() {
+        if (usuario != null) {
+            return (usuario.getNombres() != null ? usuario.getNombres() : "") + " " +
+                    (usuario.getApellidos() != null ? usuario.getApellidos() : "");
+        }
+        return "Aprendiz";
+    }
+
+    // Método para obtener la fecha de inicio formateada
+    public LocalDate getFechaInicio() {
+        if (ficha != null && ficha.getFecha_fin_lec() != null) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                return LocalDate.parse(ficha.getFecha_fin_lec(), formatter);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // Método para obtener la fecha final formateada
+    public LocalDate getFechaFin() {
+        if (ficha != null && ficha.getFecha_final() != null) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                return LocalDate.parse(ficha.getFecha_final(), formatter);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // Getters y Setters
     public Long getId_aprendices() {
         return id_aprendices;
     }
 
     public void setId_aprendices(Long id_aprendices) {
         this.id_aprendices = id_aprendices;
-    }
-
-    public Integer getId_usuarios() {
-        return id_usuarios;
-    }
-
-    public void setId_usuarios(Integer id_usuarios) {
-        this.id_usuarios = id_usuarios;
     }
 
     public String getEstado() {
@@ -45,71 +125,43 @@ public class Aprendiz {
         this.estado = estado;
     }
 
-    public Integer getId_fichas() {
-        return id_fichas;
+    public Usuarios getUsuario() {
+        return usuario;
     }
 
-    public void setId_fichas(Integer id_fichas) {
-        this.id_fichas = id_fichas;
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
     }
 
-    public Integer getId_empresas() {
-        return id_empresas;
+    public Fichas getFicha() {
+        return ficha;
     }
 
-    public void setId_empresas(Integer id_empresas) {
-        this.id_empresas = id_empresas;
+    public void setFicha(Fichas ficha) {
+        this.ficha = ficha;
     }
 
-    public Integer getId_instructor() {
-        return id_instructor;
+    public Empresas getEmpresa() {
+        return empresa;
     }
 
-    public void setId_instructor(Integer id_instructor) {
-        this.id_instructor = id_instructor;
+    public void setEmpresa(Empresas empresa) {
+        this.empresa = empresa;
     }
 
-    public Integer getId_modalidad() {
-        return id_modalidad;
+    public Usuarios getInstructor() {
+        return instructor;
     }
 
-    public void setId_modalidad(Integer id_modalidad) {
-        this.id_modalidad = id_modalidad;
-    }
-    public String getNombre() {
-        return nombre;
+    public void setInstructor(Usuarios instructor) {
+        this.instructor = instructor;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public Modalidad getModalidad() {
+        return modalidad;
     }
 
-    public Integer getProgreso() {
-        return progreso;
-    }
-
-    public void setProgreso(Integer progreso) {
-        this.progreso = progreso;
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public int calcularProgreso() {
-        return this.progreso != null ? this.progreso : 0;
+    public void setModalidad(Modalidad modalidad) {
+        this.modalidad = modalidad;
     }
 }
-
