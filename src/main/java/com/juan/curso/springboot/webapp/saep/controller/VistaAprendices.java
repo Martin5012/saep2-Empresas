@@ -25,8 +25,14 @@ public class VistaAprendices
     }
     @GetMapping("/vistaa/form")
     public String formulario(Model model) {
-        model.addAttribute("aprendices", new Aprendices()); // Objeto vacío para el formulario
-        return "aprendices_form"; // Vista del formulario para crear
+
+        model.addAttribute("aprendices", new Aprendices());
+        model.addAttribute("usuarios", usuariosRepository.findAll()); // Solo instructores
+        model.addAttribute("fichas", fichasRepository.findAll());
+        model.addAttribute("modalidad", modalidadRepository.findAll());
+        model.addAttribute("empresas", empresasRepository.findAll());
+        return "aprendices_form";
+
     }
     @PostMapping("/vistaa/guardar")
     public String guardar(@ModelAttribute Aprendices aprendices, RedirectAttributes ra) {
