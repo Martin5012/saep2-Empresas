@@ -84,9 +84,9 @@
         </div>
 
  <div class="mb-3">
-            <label class="form-label">Nombres y Apellidos</label>
+            <label class="form-label">Instructor</label>
             <select th:field="*{idInstructor}" class="form-select" required>
-                <option value="" disabled selected>Seleccione los Nombres y Apellidos</option>
+                <option value="" disabled selected>Seleccione un Instructor</option>
                 <option th:each="usuarios : ${usuarios}"
                         th:value="${usuarios.id_usuarios}"
                         th:text="${usuarios.nombres+' '+usuarios.apellidos}"
@@ -97,12 +97,12 @@
 
  <div class="mb-3">
             <label class="form-label">Nombres y Apellidos</label>
-            <select th:field="*{idUsuarios}" class="form-select" required>
+            <select th:field="*{idModalidades}" class="form-select" required>
                 <option value="" disabled selected>Seleccione los Nombres y Apellidos</option>
-                <option th:each="usuarios : ${usuarios}"
-                        th:value="${usuarios.id_usuarios}"
-                        th:text="${usuarios.nombres+' '+usuarios.apellidos}"
-                        th:selected="${aprendices.idUsuarios != null and aprendices.idUsuarios.id_usuarios == usuarios.id_usuarios}">
+                <option th:each="modalidad : ${modalidad}"
+                        th:value="${modalidad.id_modalidad}"
+                        th:text="${modalidad.modalidades}"
+                        th:selected="${aprendices.idModalidades != null and aprendices.idModalidades.id_modalidades == modalidad.id_modalidades}">
                 </option>
             </select>
         </div>
