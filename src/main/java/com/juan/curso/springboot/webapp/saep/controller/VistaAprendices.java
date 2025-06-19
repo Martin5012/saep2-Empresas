@@ -3,6 +3,8 @@ package com.juan.curso.springboot.webapp.saep.controller;
 
 import com.juan.curso.springboot.webapp.saep.model.Aprendices;
 import com.juan.curso.springboot.webapp.saep.model.Fichas;
+import com.juan.curso.springboot.webapp.saep.model.Rol;
+import com.juan.curso.springboot.webapp.saep.model.Usuarios;
 import com.juan.curso.springboot.webapp.saep.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,17 +34,17 @@ public class VistaAprendices
     private RolRepository rolRepository;
 
 
-    @Autowired
-    private UsuariosRepository usuariosRepository;
-
-    @Autowired
-    private FichasRepository fichasRepository;
-
-    @Autowired
-    private ModalidadRepository modalidadRepository;
-
-    @Autowired
-    private EmpresasRepository empresasRepository;
+//    @Autowired
+//    private UsuariosRepository usuariosRepository;
+//
+//    @Autowired
+//    private FichasRepository fichasRepository;
+//
+//    @Autowired
+//    private ModalidadRepository modalidadRepository;
+//
+//    @Autowired
+//    private EmpresasRepository empresasRepository;
 
     @GetMapping("/vista/aprendices")
     public String listar(Model model) {
