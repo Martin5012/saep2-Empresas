@@ -18,7 +18,7 @@ public class VistaModalidad
     @Autowired
     private ModalidadRepository modalidadRepository;
 
-    @GetMapping("/vista/modalidad")
+    @GetMapping("/vista/modalidades")
     public String listar(Model model) {
         model.addAttribute("modalidad", modalidadRepository.findAll()); // Envía los productos a la vista
         return "modalidad"; // Devuelve la plantilla productos.html
