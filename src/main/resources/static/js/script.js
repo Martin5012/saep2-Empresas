@@ -16,41 +16,174 @@ function ocultarBarra()
     });
 }
 
+
+/*GRAFICOOOO TORTTAAAAAA=================================
+
+// JavaScript mejorado para el gráfico circular
+    document.addEventListener('DOMContentLoaded', function() {
+        initProgressChart();
+    });
+
+    function initProgressChart() {
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+
+        if (!progressFill || !progressText) {
+            console.error('Elementos del gráfico no encontrados');
+            return;
+        }
+
+        // Obtener el porcentaje de progreso del texto
+        let progress = 0;
+        const progressTextContent = progressText.textContent;
+
+        if (progressTextContent) {
+            const match = progressTextContent.match(/(\d+)/);
+            if (match) {
+                progress = parseInt(match[1]);
+            }
+        }
+
+        // Validar que el progreso esté en el rango correcto
+        progress = Math.min(Math.max(progress, 0), 100);
+
+        // Actualizar el texto del progreso
+        progressText.textContent = progress + '%';
+
+        // Aplicar el progreso usando CSS custom properties
+        const angle = (progress / 100) * 360;
+        progressFill.style.setProperty('--progress-angle', angle + 'deg');
+
+        // Animación suave
+        progressFill.style.background = `conic-gradient(#39A900 0deg, #39A900 ${angle}deg, transparent ${angle}deg)`;
+    }
+
+    // Función para ocultar/mostrar barra lateral
+    function ocultarBarra() {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const body = document.body;
+
+        if (sidebar.style.left === '-220px') {
+            sidebar.style.left = '0';
+            body.style.marginLeft = '220px';
+        } else {
+            sidebar.style.left = '-220px';
+            body.style.marginLeft = '0';
+        }
+    }*/
+
+
+
+
+
+
 <!--GRAFICCOOOOO-->
 
-// resources/static/js/grafico.js
+//resources/static/js/grafico.js
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar el gráfico de progreso
+    initProgressChart();
+
+    // Inicializar otros elementos de la página
+    initPageElements();
+});
+
+function initProgressChart() {
     // Obtener elementos del DOM
-    const progressCircle = document.getElementById('progress-circle');
+    const progressFill = document.getElementById('progress-fill');
     const progressText = document.getElementById('progress-text');
 
-    // Obtener el porcentaje de progreso (usando Thymeleaf o valor por defecto)
-    let progress = 77; // Valor por defecto
-    if(progressText.textContent) {
-        progress = parseInt(progressText.textContent);
+    if (!progressFill || !progressText) {
+        console.error('Elementos del gráfico no encontrados');
+        return;
     }
 
-    // Calcular el ángulo de rotación
-    const angle = (progress / 100) * 360;
+    // Obtener el porcentaje de progreso del texto
+    let progress = 0;
+    const progressTextContent = progressText.textContent;
 
-    // Aplicar la rotación al círculo de progreso
+    if (progressTextContent) {
+        // Extraer el número del texto (ej: "75%" -> 75)
+        const match = progressTextContent.match(/(\d+)/);
+        if (match) {
+            progress = parseInt(match[1]);
+        }
+    }
+
+    // Validar que el progreso esté en el rango correcto
+    progress = Math.min(Math.max(progress, 0), 100);
+
+    // Actualizar el texto del progreso
+    progressText.textContent = progress + '%';
+
+    // Animar el progreso
+    animateProgress(progressFill, progress);
+}
+
+function animateProgress(progressElement, targetProgress) {
+    // Calcular el ángulo basado en el progreso (360 grados = 100%)
+    const targetAngle = (targetProgress / 100) * 360;
+
+    // Animación suave del progreso
+    let currentAngle = 0;
+    const animationDuration = 2000; // 2 segundos
+    const startTime = Date.now();
+
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / animationDuration, 1);
+
+        // Usar easing para una animación más suave
+        const easedProgress = easeOutCubic(progress);
+        currentAngle = targetAngle * easedProgress;
+
+        updateProgressCircle(progressElement, currentAngle);
+
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+
+    animate();
+}
+
+function updateProgressCircle(progressElement, angle) {
+    // Configurar el círculo de progreso basado en el ángulo
     if (angle <= 180) {
-        progressCircle.style.transform = 'rotate(' + (90 + angle) + 'deg)';
-        progressCircle.style.clip = 'rect(0, 75px, 150px, 0)';
-    } else {
-        progressCircle.style.transform = 'rotate(' + (90 + angle) + 'deg)';
-        progressCircle.style.clip = 'rect(auto, auto, auto, auto)';
+        // Para ángulos menores o iguales a 180 grados
+        progressElement.style.transform = `rotate(${90 + angle}deg)`;
+        progressElement.style.clip = 'rect(0, 125px, 250px, 0)';
 
-        // Crear un segundo arco para ángulos mayores a 180 grados
-        const secondArc = document.createElement('div');
-        secondArc.className = 'progress-circle-progress';
-        secondArc.style.borderTopColor = '#39A900';
+        // Remover segundo arco si existe
+        const existingSecondArc = progressElement.parentNode.querySelector('.progress-second-arc');
+        if (existingSecondArc) {
+            existingSecondArc.remove();
+        }
+    } else {
+        // Para ángulos mayores a 180 grados
+        progressElement.style.transform = `rotate(${90 + angle}deg)`;
+        progressElement.style.clip = 'rect(auto, auto, auto, auto)';
+
+        // Crear o actualizar el segundo arco
+        let secondArc = progressElement.parentNode.querySelector('.progress-second-arc');
+        if (!secondArc) {
+            secondArc = document.createElement('div');
+            secondArc.className = 'progress-circle-fill progress-second-arc';
+            secondArc.style.borderTopColor = '#39A900';
+            progressElement.parentNode.appendChild(secondArc);
+        }
+
         secondArc.style.transform = 'rotate(90deg)';
-        secondArc.style.clip = 'rect(0, 150px, 150px, 75px)';
-        progressCircle.parentNode.insertBefore(secondArc, progressCircle.nextSibling);
+        secondArc.style.clip = 'rect(0, 125px, 250px, 0)';
     }
-});
+}
+
+// Función de easing para animación suave
+function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+}
 
 <!--EDITAR PERFILLL-->
 
