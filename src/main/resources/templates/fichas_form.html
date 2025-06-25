@@ -60,10 +60,10 @@
             <div class="filterable-select-container">
                 <input type="text"
                        class="filterable-input"
-                       id="empresa-search"
+                       id="programa-search"
                        placeholder="Buscar Programa..."
                        autocomplete="off">
-                <div class="filterable-dropdown" id="empresa-dropdown">
+                <div class="filterable-dropdown" id="programa-dropdown">
                     <div th:each="programa : ${programas}"
                          class="filterable-option"
                          th:data-value="${programa.id_programas}"
@@ -71,7 +71,7 @@
                          th:text="${programa.nombre}">
                     </div>
                 </div>
-                <select th:field="*{idProgramas}" style="display: none;" id="empresa-select" required>
+                <select th:field="*{idProgramas}" style="display: none;" id="programa-select" required>
                     <option value="">Seleccione un Programa</option>
                     <option th:each="programa : ${programas}"
                             th:value="${programa.id_programas}"

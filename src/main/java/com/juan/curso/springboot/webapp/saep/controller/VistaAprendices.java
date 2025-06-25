@@ -123,13 +123,13 @@ public class VistaAprendices
         model.addAttribute("usuarios", coevaluadores);
         return "formulario-evaluadores";
     }
-    @GetMapping("/formulario-aprendices")
-    public String mostrarFormularioA(Model model) {
-        Rol coevaluadorRol = rolRepository.findById(1L).orElse(null);
-        List<Usuarios> coevaluadores = usuariosRepository.findByRol(coevaluadorRol);
-        model.addAttribute("usuarios", coevaluadores);
-        return "formulario-aprendices";
-    }
+//    @GetMapping("/formulario-aprendices")
+//    public String mostrarFormularioA(Model model) {
+//        Rol coevaluadorRol = rolRepository.findById(1L).orElse(null);
+//        List<Usuarios> coevaluadores = usuariosRepository.findByRol(coevaluadorRol);
+//        model.addAttribute("usuarios", coevaluadores);
+//        return "formulario-aprendices";
+//    }
 
     @GetMapping("/vistaa/asignacion")
     public String asignacion(@RequestParam(value = "idAprendiz", required = false) Long idAprendiz,

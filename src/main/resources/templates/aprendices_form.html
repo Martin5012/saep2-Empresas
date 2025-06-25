@@ -7,9 +7,8 @@
     <!-- CSS desde local -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/filterable-select.css}">
-
 </head>
-<body>
+<body style="margin-left: 220px; background-color: #f8f9fa;">
 
 <!-- Botón para ocultar/mostrar menú -->
 <button id="toggleSidebar" class="btn btn-outline" onclick="ocultarBarra()" style="position: fixed; top: 5px; left: 5px; z-index: 1050;">
@@ -33,156 +32,152 @@
         <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
-        <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
-
     </nav>
 </div>
 
 <!-- Contenido principal -->
 <div style="padding: 20px;">
+    <h1 class="text-success" th:text="${aprendices.id_aprendices == null} ? 'Registrar Aprendiz' : 'Editar Aprendiz'"></h1>
 
-        <h1 class="text-success mb-4" th:text="${aprendices.id_aprendices == null} ? 'Registrar Aprendiz' : 'Editar Aprendiz'"></h1>
+    <form th:action="@{/vistaa/guardar}" th:object="${aprendices}" method="post" novalidate>
+        <input type="hidden" th:field="*{id_aprendices}" />
 
-        <form th:action="@{/vistaa/guardar}" th:object="${aprendices}" method="post" novalidate>
-            <input type="hidden" th:field="*{id_aprendices}" />
-
-            <!-- Aprendiz con filtro -->
-            <div class="mb-3">
-                <label class="form-label">Nombres y Apellidos (Aprendiz) *</label>
-                <div class="filterable-select-container">
-                    <input type="text"
-                           class="filterable-input form-control"
-                           id="aprendiz-search"
-                           placeholder="Buscar aprendiz..."
-                           autocomplete="off">
-                    <div class="filterable-dropdown" id="aprendiz-dropdown">
-                        <div th:each="usuario : ${usuariosAprendices}"
-                             class="filterable-option"
-                             th:data-value="${usuario.id_usuarios}"
-                             th:data-text="${usuario.nombres + ' ' + usuario.apellidos}"
-                             th:text="${usuario.nombres + ' ' + usuario.apellidos}">
-                        </div>
+        <!-- Aprendiz con filtro -->
+        <div class="mb-3">
+            <label class="form-label">Nombres y Apellidos (Aprendiz) *</label>
+            <div class="filterable-select-container">
+                <input type="text"
+                       class="filterable-input"
+                       id="aprendiz-search"
+                       placeholder="Buscar aprendiz..."
+                       autocomplete="off">
+                <div class="filterable-dropdown" id="aprendiz-dropdown">
+                    <div th:each="usuario : ${usuariosAprendices}"
+                         class="filterable-option"
+                         th:data-value="${usuario.id_usuarios}"
+                         th:data-text="${usuario.nombres + ' ' + usuario.apellidos}"
+                         th:text="${usuario.nombres + ' ' + usuario.apellidos}">
                     </div>
-                    <select th:field="*{idUsuarios}" style="display: none;" id="aprendiz-select" required>
-                        <option value="">Seleccione un aprendiz</option>
-                        <option th:each="usuario : ${usuariosAprendices}"
-                                th:value="${usuario.id_usuarios}"
-                                th:text="${usuario.nombres + ' ' + usuario.apellidos}">
-                        </option>
-                    </select>
                 </div>
-            </div>
-
-            <!-- Código de Ficha con filtro -->
-            <div class="mb-3">
-                <label class="form-label">Código de Ficha *</label>
-                <div class="filterable-select-container">
-                    <input type="text"
-                           class="filterable-input form-control"
-                           id="ficha-search"
-                           placeholder="Buscar código de ficha..."
-                           autocomplete="off">
-                    <div class="filterable-dropdown" id="ficha-dropdown">
-                        <div th:each="ficha : ${fichas}"
-                             class="filterable-option"
-                             th:data-value="${ficha.id_fichas}"
-                             th:data-text="${ficha.codigo}"
-                             th:text="${ficha.codigo}">
-                        </div>
-                    </div>
-                    <select th:field="*{idFichas}" style="display: none;" id="ficha-select" required>
-                        <option value="">Seleccione una ficha</option>
-                        <option th:each="ficha : ${fichas}"
-                                th:value="${ficha.id_fichas}"
-                                th:text="${ficha.codigo}">
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Empresa con filtro -->
-            <div class="mb-3">
-                <label class="form-label">Empresa *</label>
-                <div class="filterable-select-container">
-                    <input type="text"
-                           class="filterable-input form-control"
-                           id="empresa-search"
-                           placeholder="Buscar empresa..."
-                           autocomplete="off">
-                    <div class="filterable-dropdown" id="empresa-dropdown">
-                        <div th:each="empresa : ${empresas}"
-                             class="filterable-option"
-                             th:data-value="${empresa.id_empresas}"
-                             th:data-text="${empresa.nombre}"
-                             th:text="${empresa.nombre}">
-                        </div>
-                    </div>
-                    <select th:field="*{idEmpresas}" style="display: none;" id="empresa-select" required>
-                        <option value="">Seleccione una empresa</option>
-                        <option th:each="empresa : ${empresas}"
-                                th:value="${empresa.id_empresas}"
-                                th:text="${empresa.nombre}">
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Evaluador con filtro -->
-            <div class="mb-3">
-                <label class="form-label">Evaluador *</label>
-                <div class="filterable-select-container">
-                    <input type="text"
-                           class="filterable-input form-control"
-                           id="evaluador-search"
-                           placeholder="Buscar evaluador..."
-                           autocomplete="off">
-                    <div class="filterable-dropdown" id="evaluador-dropdown">
-                        <div th:each="evaluador : ${evaluadores}"
-                             class="filterable-option"
-                             th:data-value="${evaluador.id_usuarios}"
-                             th:data-text="${evaluador.nombres + ' ' + evaluador.apellidos}"
-                             th:text="${evaluador.nombres + ' ' + evaluador.apellidos}">
-                        </div>
-                    </div>
-                    <select th:field="*{idInstructor}" style="display: none;" id="evaluador-select" required>
-                        <option value="">Seleccione un evaluador</option>
-                        <option th:each="evaluador : ${evaluadores}"
-                                th:value="${evaluador.id_usuarios}"
-                                th:text="${evaluador.nombres + ' ' + evaluador.apellidos}">
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Modalidad (sin filtro por ser pocas opciones) -->
-            <div class="mb-3">
-                <label class="form-label">Modalidad *</label>
-                <select th:field="*{idModalidades}" class="form-select" required>
-                    <option value="" disabled selected>Seleccione una Modalidad</option>
-                    <option th:each="modalidad : ${modalidad}"
-                            th:value="${modalidad.id_modalidad}"
-                            th:text="${modalidad.modalidades}"
-                            th:selected="${aprendices.idModalidades != null and aprendices.idModalidades.id_modalidad == modalidad.id_modalidad}">
+                <select th:field="*{idUsuarios}" style="display: none;" id="aprendiz-select" required>
+                    <option value="">Seleccione un aprendiz</option>
+                    <option th:each="usuario : ${usuariosAprendices}"
+                            th:value="${usuario.id_usuarios}"
+                            th:text="${usuario.nombres + ' ' + usuario.apellidos}">
                     </option>
                 </select>
             </div>
+        </div>
 
-            <!-- Estado -->
-            <div class="mb-3">
-                <label class="form-label">Estado *</label>
-                <select th:field="*{estado}" class="form-select" required>
-                    <option value="" disabled th:if="${aprendices.estado == null}" selected>Seleccione una opción</option>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
+        <!-- Código de Ficha con filtro -->
+        <div class="mb-3">
+            <label class="form-label">Código de Ficha *</label>
+            <div class="filterable-select-container">
+                <input type="text"
+                       class="filterable-input"
+                       id="ficha-search"
+                       placeholder="Buscar código de ficha..."
+                       autocomplete="off">
+                <div class="filterable-dropdown" id="ficha-dropdown">
+                    <div th:each="ficha : ${fichas}"
+                         class="filterable-option"
+                         th:data-value="${ficha.id_fichas}"
+                         th:data-text="${ficha.codigo}"
+                         th:text="${ficha.codigo}">
+                    </div>
+                </div>
+                <select th:field="*{idFichas}" style="display: none;" id="ficha-select" required>
+                    <option value="">Seleccione una ficha</option>
+                    <option th:each="ficha : ${fichas}"
+                            th:value="${ficha.id_fichas}"
+                            th:text="${ficha.codigo}">
+                    </option>
                 </select>
             </div>
+        </div>
 
-            <!-- Botones -->
-            <div class="mb-3">
-                <button type="submit" class="btn btn-success">Guardar</button>
-                <a th:href="@{/vista/aprendices}" class="btn btn-secondary">Volver</a>
+        <!-- Empresa con filtro -->
+        <div class="mb-3">
+            <label class="form-label">Empresa *</label>
+            <div class="filterable-select-container">
+                <input type="text"
+                       class="filterable-input"
+                       id="empresa-search"
+                       placeholder="Buscar empresa..."
+                       autocomplete="off">
+                <div class="filterable-dropdown" id="empresa-dropdown">
+                    <div th:each="empresa : ${empresas}"
+                         class="filterable-option"
+                         th:data-value="${empresa.id_empresas}"
+                         th:data-text="${empresa.nombre}"
+                         th:text="${empresa.nombre}">
+                    </div>
+                </div>
+                <select th:field="*{idEmpresas}" style="display: none;" id="empresa-select" required>
+                    <option value="">Seleccione una empresa</option>
+                    <option th:each="empresa : ${empresas}"
+                            th:value="${empresa.id_empresas}"
+                            th:text="${empresa.nombre}">
+                    </option>
+                </select>
             </div>
-        </form>
+        </div>
+
+        <!-- Evaluador con filtro -->
+        <div class="mb-3">
+            <label class="form-label">Evaluador *</label>
+            <div class="filterable-select-container">
+                <input type="text"
+                       class="filterable-input"
+                       id="evaluador-search"
+                       placeholder="Buscar evaluador..."
+                       autocomplete="off">
+                <div class="filterable-dropdown" id="evaluador-dropdown">
+                    <div th:each="evaluador : ${evaluadores}"
+                         class="filterable-option"
+                         th:data-value="${evaluador.id_usuarios}"
+                         th:data-text="${evaluador.nombres + ' ' + evaluador.apellidos}"
+                         th:text="${evaluador.nombres + ' ' + evaluador.apellidos}">
+                    </div>
+                </div>
+                <select th:field="*{idInstructor}" style="display: none;" id="evaluador-select" required>
+                    <option value="">Seleccione un evaluador</option>
+                    <option th:each="evaluador : ${evaluadores}"
+                            th:value="${evaluador.id_usuarios}"
+                            th:text="${evaluador.nombres + ' ' + evaluador.apellidos}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Modalidad (sin filtro por ser pocas opciones) -->
+        <div class="mb-3">
+            <label class="form-label">Modalidad *</label>
+            <select th:field="*{idModalidades}" class="form-select" required>
+                <option value="" disabled selected>Seleccione una Modalidad</option>
+                <option th:each="modalidad : ${modalidad}"
+                        th:value="${modalidad.id_modalidad}"
+                        th:text="${modalidad.modalidades}"
+                        th:selected="${aprendices.idModalidades != null and aprendices.idModalidades.id_modalidad == modalidad.id_modalidad}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Estado -->
+        <div class="mb-3">
+            <label class="form-label">Estado *</label>
+            <select th:field="*{estado}" class="form-select" required>
+                <option value="" disabled th:if="${aprendices.estado == null}" selected>Seleccione una opción</option>
+                <option value="En curso">En curso</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Desaprobado">Desaprobado</option>
+            </select>
+        </div>
+
+        <!-- Botones -->
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a th:href="@{/vista/aprendices}" class="btn btn-secondary">Volver</a>
+    </form>
 </div>
 
 <!-- Scripts JavaScript -->

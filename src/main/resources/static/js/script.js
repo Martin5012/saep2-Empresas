@@ -78,9 +78,7 @@ function ocultarBarra()
 
 
 
-<!--GRAFICCOOOOO-->
-
-//resources/static/js/grafico.js
+//  <!--GRAFICCOOOOO-->
 
 document.addEventListener('DOMContentLoaded', function() {
     // Inicializar el gráfico de progreso
@@ -611,7 +609,8 @@ function initializeFilterableSelects() {
         { search: 'aprendiz-search', dropdown: 'aprendiz-dropdown', select: 'aprendiz-select' },
         { search: 'ficha-search', dropdown: 'ficha-dropdown', select: 'ficha-select' },
         { search: 'empresa-search', dropdown: 'empresa-dropdown', select: 'empresa-select' },
-        { search: 'evaluador-search', dropdown: 'evaluador-dropdown', select: 'evaluador-select' }
+        { search: 'evaluador-search', dropdown: 'evaluador-dropdown', select: 'evaluador-select' },
+        { search: 'programa-search', dropdown: 'programa-dropdown', select: 'programa-select' }
     ];
 
     const filterableSelects = {};

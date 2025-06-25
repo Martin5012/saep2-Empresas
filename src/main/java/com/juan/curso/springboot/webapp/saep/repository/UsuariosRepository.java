@@ -17,4 +17,10 @@ public interface UsuariosRepository extends JpaRepository<Usuarios,Long> {
 
     List<Usuarios> findByRol(Rol rol);
 
+//    // Buscar usuarios por rol
+//    List<Usuarios> findByIdRol(int idRol);
+
+    // Buscar usuarios por rol y estado
+//    List<Usuarios> findByIdRolAndEstado(int idRol, String estado);
+
 }
