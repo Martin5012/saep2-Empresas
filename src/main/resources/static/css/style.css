@@ -543,8 +543,9 @@ body.login {
     flex-direction: column;
 }
 .logo {
-    width: 150px;
+    width: 210px;
     margin-bottom: 20px;
+    margin-right: 15px
 }
 .login-container {
     background-color: white;
@@ -564,6 +565,7 @@ body.login {
 
 .btn-sena:hover {
     background-color: #2e8000;
+    color: white;
 }
 
 body.login {
