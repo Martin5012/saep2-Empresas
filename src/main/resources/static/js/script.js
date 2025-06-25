@@ -271,50 +271,79 @@ function easeOutCubic(t) {
         }
     });
 
+
 /*=========================SELECTS FILTRABLES===============================*/
 
 /**
  * Clase para manejar selects con filtrado en tiempo real (SIN TILDES)
+ * Versión mejorada con mejor posicionamiento
  */
 class FilterableSelect {
     constructor(searchInputId, dropdownId, hiddenSelectId) {
         this.searchInput = document.getElementById(searchInputId);
         this.dropdown = document.getElementById(dropdownId);
         this.hiddenSelect = document.getElementById(hiddenSelectId);
+        this.container = this.searchInput?.closest('.filterable-select-container');
 
-        if (!this.searchInput || !this.dropdown || !this.hiddenSelect) {
+        if (!this.searchInput || !this.dropdown || !this.hiddenSelect || !this.container) {
             console.warn(`FilterableSelect: No se encontraron elementos para ${searchInputId}`);
             return;
         }
 
         this.options = Array.from(this.dropdown.querySelectorAll('.filterable-option'));
         this.selectedIndex = -1;
+        this.isOpen = false;
 
         this.init();
     }
 
     init() {
+        // IMPORTANTE: Ocultar dropdown inicialmente
+        this.hideDropdown();
+
         // Configurar eventos
         this.searchInput.addEventListener('input', (e) => this.filterOptions(e.target.value));
         this.searchInput.addEventListener('focus', () => this.showDropdown());
-        this.searchInput.addEventListener('blur', () => {
-            // Delay para permitir click en opciones
-            setTimeout(() => this.hideDropdown(), 200);
+
+        // Mejorar el manejo del blur
+        this.searchInput.addEventListener('blur', (e) => {
+            // Verificar si el click fue dentro del dropdown
+            setTimeout(() => {
+                if (!this.dropdown.matches(':hover') && !this.container.contains(document.activeElement)) {
+                    this.hideDropdown();
+                }
+            }, 150);
         });
 
         // Navegación con teclado
         this.searchInput.addEventListener('keydown', (e) => this.handleKeydown(e));
 
-        // Click en opciones
+        // Click en opciones con mejor manejo
         this.options.forEach((option, index) => {
-            option.addEventListener('click', () => this.selectOption(option, index));
+            option.addEventListener('mousedown', (e) => {
+                // Prevenir que el input pierda el foco antes del click
+                e.preventDefault();
+            });
+
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.selectOption(option, index);
+            });
+
             option.addEventListener('mouseenter', () => this.highlightOption(index));
         });
 
-        // Cerrar dropdown al hacer click fuera
+        // Mejorar el manejo de clicks fuera
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.filterable-select-container')) {
+            if (!this.container.contains(e.target)) {
                 this.hideDropdown();
+            }
+        });
+
+        // Manejar redimensionamiento de ventana
+        window.addEventListener('resize', () => {
+            if (this.isOpen) {
+                this.repositionDropdown();
             }
         });
 
@@ -324,13 +353,12 @@ class FilterableSelect {
 
     /**
      * Función para normalizar texto removiendo tildes y caracteres especiales
-     * Permite búsquedas flexibles sin importar acentos
      */
     normalizeText(text) {
         return text
             .toLowerCase()
-            .normalize("NFD") // Descompone caracteres con tildes
-            .replace(/[\u0300-\u036f]/g, "") // Remueve los diacríticos (tildes)
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .trim();
     }
 
@@ -357,7 +385,11 @@ class FilterableSelect {
 
         // Mostrar mensaje si no hay resultados
         this.showNoResults(!hasResults && normalizedSearchTerm.length > 0);
-        this.showDropdown();
+
+        // Mostrar dropdown si hay término de búsqueda o está enfocado
+        if (normalizedSearchTerm.length > 0 || document.activeElement === this.searchInput) {
+            this.showDropdown();
+        }
 
         return visibleOptions;
     }
@@ -368,16 +400,20 @@ class FilterableSelect {
         switch(e.key) {
             case 'ArrowDown':
                 e.preventDefault();
+                if (!this.isOpen) {
+                    this.showDropdown();
+                }
                 this.selectedIndex = Math.min(this.selectedIndex + 1, visibleOptions.length - 1);
                 this.highlightOption(visibleOptions[this.selectedIndex]);
-                this.showDropdown();
                 break;
 
             case 'ArrowUp':
                 e.preventDefault();
+                if (!this.isOpen) {
+                    this.showDropdown();
+                }
                 this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
                 this.highlightOption(visibleOptions[this.selectedIndex]);
-                this.showDropdown();
                 break;
 
             case 'Enter':
@@ -389,6 +425,12 @@ class FilterableSelect {
                 break;
 
             case 'Escape':
+                this.hideDropdown();
+                this.searchInput.blur();
+                break;
+
+            case 'Tab':
+                // Permitir navegación con Tab
                 this.hideDropdown();
                 break;
         }
@@ -404,6 +446,19 @@ class FilterableSelect {
         this.removeHighlight();
         if (index >= 0 && this.options[index]) {
             this.options[index].classList.add('selected');
+            // Scroll automático para mantener la opción visible
+            this.scrollToOption(this.options[index]);
+        }
+    }
+
+    scrollToOption(option) {
+        const dropdownRect = this.dropdown.getBoundingClientRect();
+        const optionRect = option.getBoundingClientRect();
+
+        if (optionRect.bottom > dropdownRect.bottom) {
+            this.dropdown.scrollTop += optionRect.bottom - dropdownRect.bottom;
+        } else if (optionRect.top < dropdownRect.top) {
+            this.dropdown.scrollTop -= dropdownRect.top - optionRect.top;
         }
     }
 
@@ -439,17 +494,74 @@ class FilterableSelect {
 
         // Disparar evento change para validaciones
         this.hiddenSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+        // Disparar evento personalizado
+        this.container.dispatchEvent(new CustomEvent('optionSelected', {
+            detail: { value, text, option }
+        }));
     }
 
     showDropdown() {
-        this.dropdown.style.display = 'block';
+        if (this.isOpen) return;
+
+        // Cerrar otros dropdowns abiertos
+        this.closeOtherDropdowns();
+
+        // Marcar contenedor como activo
+        this.container.classList.add('active');
+
+        // Mostrar dropdown
+        this.dropdown.classList.add('show');
+        this.isOpen = true;
+
+        // Reposicionar si es necesario
+        this.repositionDropdown();
     }
 
     hideDropdown() {
-        this.dropdown.style.display = 'none';
+        if (!this.isOpen) return;
+
+        // Marcar contenedor como inactivo
+        this.container.classList.remove('active');
+
+        // Ocultar dropdown
+        this.dropdown.classList.remove('show');
         this.showNoResults(false);
         this.selectedIndex = -1;
         this.removeHighlight();
+        this.isOpen = false;
+    }
+
+    repositionDropdown() {
+        // Verificar si el dropdown se sale de la pantalla
+        const rect = this.container.getBoundingClientRect();
+        const dropdownHeight = 200; // max-height del dropdown
+        const spaceBelow = window.innerHeight - rect.bottom;
+
+        if (spaceBelow < dropdownHeight && rect.top > dropdownHeight) {
+            // Mostrar arriba del input
+            this.dropdown.style.top = 'auto';
+            this.dropdown.style.bottom = '100%';
+            this.dropdown.style.borderRadius = '0.375rem 0.375rem 0 0';
+        } else {
+            // Mostrar debajo del input (normal)
+            this.dropdown.style.top = 'calc(100% + 1px)';
+            this.dropdown.style.bottom = 'auto';
+            this.dropdown.style.borderRadius = '0 0 0.375rem 0.375rem';
+        }
+    }
+
+    closeOtherDropdowns() {
+        // Cerrar otros dropdowns que puedan estar abiertos
+        document.querySelectorAll('.filterable-select-container.active').forEach(container => {
+            if (container !== this.container) {
+                const otherDropdown = container.querySelector('.filterable-dropdown');
+                if (otherDropdown) {
+                    container.classList.remove('active');
+                    otherDropdown.classList.remove('show');
+                }
+            }
+        });
     }
 
     setInitialValue() {
@@ -478,6 +590,16 @@ class FilterableSelect {
             this.selectOption(option, this.options.indexOf(option));
         }
     }
+
+    // Método público para obtener el valor actual
+    getValue() {
+        return this.hiddenSelect.value;
+    }
+
+    // Método público para obtener el texto actual
+    getText() {
+        return this.searchInput.value;
+    }
 }
 
 /**
@@ -501,16 +623,29 @@ function initializeFilterableSelects() {
                 config.dropdown,
                 config.select
             );
+            console.log(`Inicializado select filtrable: ${config.search}`);
         }
     });
 
     // Hacer disponible globalmente para debugging
     window.filterableSelects = filterableSelects;
+
+    console.log('Selects filtrables inicializados:', Object.keys(filterableSelects));
 }
 
 /**
  * Inicializar selects filtrables cuando el DOM esté listo
  */
 document.addEventListener('DOMContentLoaded', function() {
-    initializeFilterableSelects();
+    // Agregar un pequeño delay para asegurar que todo esté cargado
+    setTimeout(() => {
+        initializeFilterableSelects();
+    }, 100);
 });
+
+// También inicializar si el DOM ya está cargado
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeFilterableSelects);
+} else {
+    initializeFilterableSelects();
+}
