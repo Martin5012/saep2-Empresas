@@ -153,6 +153,57 @@
                 </select>
             </div>
 
+            <!-- Sección visible solo para Aprendices -->
+
+            <div th:if="${aprendiz != null}">
+
+                <!-- Campo oculto con el ID del aprendiz -->
+                <input type="hidden" name="id_aprendices" th:value="${aprendiz.id_aprendices}" />
+
+
+                <!-- Modalidad -->
+                <div class="form-row" th:if="${aprendiz != null}">
+                    <label class="form-label-fixed">Modalidad:</label>
+                    <select class="form-select-wide" name="id_modalidad" id="id_modalidad" disabled>
+                        <option value="1" th:selected="${aprendiz.idModalidades.id_modalidad == 1}">Vinculación Laboral</option>
+                        <option value="2" th:selected="${aprendiz.idModalidades.id_modalidad == 2}">Pasantías</option>
+                        <option value="3" th:selected="${aprendiz.idModalidades.id_modalidad == 3}">Proyecto Productivo</option>
+                        <option value="4" th:selected="${aprendiz.idModalidades.id_modalidad == 4}">Monitorías</option>
+                        <option value="5" th:selected="${aprendiz.idModalidades.id_modalidad == 5}">Contrato de Aprendizaje</option>
+                    </select>
+                </div>
+
+                <!-- Ficha -->
+                <div class="form-row">
+                    <label class="form-label-fixed">Ficha:</label>
+                    <input type="text" name="codigoFicha" th:value="${aprendiz.idFichas.codigo}" class="form-control-wide" required disabled />
+                </div>
+
+                <!-- Programa -->
+                <div class="form-row">
+                    <label class="form-label-fixed">Programa:</label>
+                    <input type="text" name="nombrePrograma" th:value="${aprendiz.idFichas.idProgramas.nombre}" class="form-control-wide" required disabled />
+                </div>
+
+                <!-- Empresa -->
+                <div class="form-row">
+                    <label class="form-label-fixed">Empresa:</label>
+                    <input type="text" name="nombreEmpresa" th:value="${aprendiz.idEmpresas.nombre}" class="form-control-wide" required disabled />
+                </div>
+
+                <!-- Estado Formativo -->
+                <div class="form-row">
+                    <label class="form-label-fixed">Estado Formativo:</label>
+                    <select class="form-select-wide" name="estado_formativo" id="estado_formativo" disabled>
+                        <option value="En curso" th:selected="${aprendiz.estado == 'En curso'}">En curso</option>
+                        <option value="Aprobado" th:selected="${aprendiz.estado == 'Aprobado'}">Aprobado</option>
+                        <option value="No aprobado" th:selected="${aprendiz.estado == 'No aprobado'}">No aprobado</option>
+                    </select>
+                </div>
+            </div>
+
+
+
             <!-- Botones centrados al final del formulario -->
             <div class="form-buttons">
                 <!-- Botón Guardar: deshabilitado por defecto -->

@@ -17,4 +17,7 @@ public interface AprendicesRepository extends JpaRepository<Aprendices,Long> {
             "OR LOWER(f.idEmpresas.nombre) LIKE LOWER(CONCAT('%', :criterio, '%')) " +
             "OR LOWER(f.estado) LIKE LOWER(CONCAT('%', :criterio, '%'))")
     List<Aprendices> buscarPorCriterio(@Param("criterio") String criterio);
+
+    @Query("SELECT a FROM Aprendices a WHERE a.idUsuarios.id_usuarios = :idUsuario")
+    Aprendices findByIdUsuario(@Param("idUsuario") Long idUsuario);
 }
