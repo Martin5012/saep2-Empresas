@@ -64,11 +64,18 @@ public class VistaEmpresas {
         ra.addFlashAttribute("mensaje", "Empresa guardada exitosamente");
         return "redirect:/vista/empresas"; // Redirige al listado
     }
+
     @GetMapping("/vista/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         Empresas empresas = empresasRepository.findById(id).orElse(null);
+
+        Rol coevaluadorRol = rolRepository.findById(3L).orElse(null);
+        List<Usuarios> coevaluadores = usuariosRepository.findByRol(coevaluadorRol);
+
         model.addAttribute("empresas", empresas);
-        return "empresas_form"; // Usa la misma vista que para crear
+        model.addAttribute("usuarios", coevaluadores);
+
+        return "empresas_form";
     }
     @PostMapping("/vista/eliminar/{id}")
     public String eliminar(@PathVariable Long id, RedirectAttributes ra) {
