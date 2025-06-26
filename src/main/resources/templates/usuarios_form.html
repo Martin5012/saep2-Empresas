@@ -52,13 +52,18 @@
 
 
         <div class="mb-3">
-            <label class="form-label">Tipo Dc</label>
-            <input type="text" th:field="*{tipo_dc}" class="form-control" required />
+            <label class="form-label">Tipo de Documento</label>
+            <select th:field="*{tipo_dc}" class="form-select" required>
+                <option value="" disabled th:if="${usuarios.tipo_dc == null}" selected>Seleccione una opción</option>
+                <option value="Cedula de Ciudadania">Cedula de Ciudadania</option>
+                <option value="Targeta de Identidad">Targeta de Identidad</option>
+                <option value="Cedula de Extranjeria">Cedula de Extranjeria</option>
+                <option value="PEP">PEP</option>
+            </select>
         </div>
-
         <div class="mb-3">
             <label class="form-label">Numero</label>
-            <input type="text" th:field="*{numero}" class="form-control" required />
+            <input type="number" th:field="*{numero}" class="form-control" required />
         </div>
 
         <div class="mb-3">
@@ -87,12 +92,12 @@
 
         <div class="mb-3">
             <label class="form-label">Contacto 1</label>
-            <input type="text" th:field="*{contacto1}" class="form-control" required />
+            <input type="number" th:field="*{contacto1}" class="form-control" required />
         </div>
 
         <div class="mb-3">
             <label class="form-label">Contacto 2</label>
-            <input type="text" th:field="*{contacto2}" class="form-control" required />
+            <input type="number" th:field="*{contacto2}" class="form-control" required />
         </div>
 
         <div class="mb-3">
@@ -100,9 +105,17 @@
             <input type="text" th:field="*{clave}" class="form-control" required />
         </div>
 
+        <!-- SECCIÓN CORREGIDA DEL SELECT DE ROLES -->
         <div class="mb-3">
-            <label class="form-label">ID Rol</label>
-            <input type="text" th:field="*{idRol.roles}" class="form-control" required />
+            <label class="form-label">Rol</label>
+            <select th:field="*{rol}" class="form-select" required>
+                <option value="" disabled selected>Seleccione un Rol</option>
+                <option th:each="rolItem : ${rol}"
+                        th:value="${rolItem.id_rol}"
+                        th:text="${rolItem.roles}"
+                        th:selected="${usuarios.rol != null and usuarios.rol.id_rol == rolItem.id_rol}">
+                </option>
+            </select>
         </div>
 
         <div class="mb-3">
