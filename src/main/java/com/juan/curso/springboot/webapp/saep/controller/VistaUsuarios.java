@@ -1,6 +1,7 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
 import com.juan.curso.springboot.webapp.saep.model.Usuarios;
+import com.juan.curso.springboot.webapp.saep.repository.RolRepository;
 import com.juan.curso.springboot.webapp.saep.repository.UsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ public class VistaUsuarios
 {
     @Autowired
     private UsuariosRepository usuariosRepository;
+    @Autowired
+    private RolRepository rolRepository;
 
 
     @GetMapping("/vista/usuarios")
@@ -35,6 +38,7 @@ public class VistaUsuarios
     @GetMapping("/vistau/form")
     public String formulario(Model model) {
         model.addAttribute("usuarios", new Usuarios()); // Objeto vacío para el formulario
+        model.addAttribute("rol", rolRepository.findAll());
         return "usuarios_form"; // Vista del formulario para crear
     }
     @PostMapping("/vistau/guardar")

@@ -98,6 +98,15 @@
             <td th:text="${usuarios.estado}"></td>
             <td>
                 <a th:href="@{'/vistau/editar/' + ${usuarios.id_usuarios}}" class="btn btn-warning btn-sm">Editar</a>
+
+                <!-- Botón que abre el modal del aprendiz -->
+                <button type="button"
+                        class="btn btn-info btn-sm"
+                        data-bs-toggle="modal"
+                        th:data-bs-target="'#modalUsuario' + ${usuarios.id_usuarios}">
+                    Ver perfil
+                </button>
+
                 <form th:action="@{'/vistau/eliminar/' + ${usuarios.id_usuarios}}" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-danger btn-sm"
                             onclick="return confirm('¿Está seguro que desea eliminar este producto?')">
@@ -108,7 +117,71 @@
         </tr>
         </tbody>
     </table>
+
+    <!-- Modales de los aprendices -->
+    <div th:each="usuarios : ${usuarios}">
+        <div class="modal fade"
+             th:id="'modalUsuario' + ${usuarios.id_usuarios}"
+             tabindex="-1"
+             th:aria-labelledby="'modalUsuarioLabel' + ${usuarios.id_usuarios}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-success" th:id="'modalUsuarioLabel' + ${usuarios.id_usuarios}">
+                            Perfil del Usuario
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Nombre completo:</strong>
+                            <span th:text="${usuarios != null ? usuarios.nombres + ' ' + usuarios.apellidos : 'Sin usuario'}"></span>
+                        </p>
+                        <p><strong>Tipo de Documento:</strong>
+                            <span th:text="${usuarios != null ? usuarios.tipo_dc : 'Sin usuario'}"></span>
+                        </p>
+                        <p><strong>Documento:</strong>
+                            <span th:text="${usuarios != null ? usuarios.numero : 'Sin documento'}"></span>
+                        </p>
+                        <p><strong>Correo:</strong>
+                            <span th:text="${usuarios != null ? usuarios.email : 'Sin email'}"></span>
+                        </p>
+                        <p><strong>Correo Institucional:</strong>
+                            <span th:text="${usuarios != null ? usuarios.email_insti : 'Sin Correo Insttitucional'}"></span>
+                        </p>
+                        <p><strong>Teléfono:</strong>
+                            <span th:text="${usuarios != null ? usuarios.contacto1 : 'Sin teléfono'}"></span>
+                        </p>
+                        <p><strong>Telefono Secundario:</strong>
+                            <span th:text="${usuarios != null ? usuarios.contacto2 : 'Sin Telefono Secundario'}"></span>
+                        </p>
+                        <hr>
+                        <p><strong>Direccion:</strong>
+                            <span th:text="${usuarios != null ? usuarios.direccion : 'Sin Direccion'}"></span>
+                        </p>
+                        <p><strong>clave:</strong>
+                            <span th:text="${usuarios != null ? usuarios.clave : 'Sin Clave'}"></span>
+                        </p>
+                        <p><strong>Rol:</strong>
+                            <span th:text="${usuarios.idRol != null ? usuarios.idRol.roles : 'Sin Rol'}"></span>
+                        </p>
+                        <p><strong>Estado:</strong>
+                            <span th:text="${usuarios.estado}"></span>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+</div>
+<!-- JavaScript -->
+<!-- Bootstrap JS - URL CORREGIDA -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Tu script personalizado AL FINAL -->
 <script th:src="@{/js/script.js}"></script>
 </body>
 </html>
