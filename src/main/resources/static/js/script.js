@@ -79,17 +79,13 @@ function ocultarBarra()
 
 
 //  <!--GRAFICCOOOOO-->
+// resources/static/js/grafico.js
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar el gráfico de progreso
-    initProgressChart();
-
-    // Inicializar otros elementos de la página
-    initPageElements();
+    initDynamicProgressChart();
 });
 
-function initProgressChart() {
-    // Obtener elementos del DOM
+function initDynamicProgressChart() {
     const progressFill = document.getElementById('progress-fill');
     const progressText = document.getElementById('progress-text');
 
@@ -98,89 +94,56 @@ function initProgressChart() {
         return;
     }
 
-    // Obtener el porcentaje de progreso del texto
-    let progress = 0;
-    const progressTextContent = progressText.textContent;
-
-    if (progressTextContent) {
-        // Extraer el número del texto (ej: "75%" -> 75)
-        const match = progressTextContent.match(/(\d+)/);
-        if (match) {
-            progress = parseInt(match[1]);
-        }
+    // Función para actualizar el progreso
+    function updateProgress(newPercentage) {
+        const progress = Math.min(Math.max(newPercentage, 0), 100);
+        progressText.textContent = `${progress}%`;
+        animateProgress(progressFill, progress);
     }
 
-    // Validar que el progreso esté en el rango correcto
-    progress = Math.min(Math.max(progress, 0), 100);
-
-    // Actualizar el texto del progreso
-    progressText.textContent = progress + '%';
-
-    // Animar el progreso
-    animateProgress(progressFill, progress);
-}
-
-function animateProgress(progressElement, targetProgress) {
-    // Calcular el ángulo basado en el progreso (360 grados = 100%)
-    const targetAngle = (targetProgress / 100) * 360;
-
-    // Animación suave del progreso
-    let currentAngle = 0;
-    const animationDuration = 2000; // 2 segundos
-    const startTime = Date.now();
-
-    function animate() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / animationDuration, 1);
-
-        // Usar easing para una animación más suave
-        const easedProgress = easeOutCubic(progress);
-        currentAngle = targetAngle * easedProgress;
-
-        updateProgressCircle(progressElement, currentAngle);
-
-        if (progress < 1) {
-            requestAnimationFrame(animate);
+    // Animación mejorada
+    function animateProgress(element, targetPercent) {
+        // Si el progreso es 0%, ocultamos completamente la barra
+        if (targetPercent === 0) {
+            element.style.background = `conic-gradient(#39A900 0deg, #39A900 0deg, transparent 0deg)`; // Establecer a 0%
+            element.style.display = 'block'; // Mantener visible pero vacío
+            return;
         }
+
+        element.style.display = 'block';
+        const targetAngle = (targetPercent / 100) * 360;
+        let currentAngle = 0;
+        const duration = 1500;
+        const startTime = performance.now();
+
+        function updateAnimation() {
+            const elapsed = performance.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            currentAngle = targetAngle * easeOutQuart(progress);
+
+            // Aplicamos el ángulo calculado usando conic-gradient para el efecto de arco
+            element.style.background = `conic-gradient(#39A900 0deg, #39A900 ${currentAngle}deg, transparent ${currentAngle}deg)`;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateAnimation);
+            }
+        }
+
+        updateAnimation();
     }
 
-    animate();
-}
-
-function updateProgressCircle(progressElement, angle) {
-    // Configurar el círculo de progreso basado en el ángulo
-    if (angle <= 180) {
-        // Para ángulos menores o iguales a 180 grados
-        progressElement.style.transform = `rotate(${90 + angle}deg)`;
-        progressElement.style.clip = 'rect(0, 125px, 250px, 0)';
-
-        // Remover segundo arco si existe
-        const existingSecondArc = progressElement.parentNode.querySelector('.progress-second-arc');
-        if (existingSecondArc) {
-            existingSecondArc.remove();
-        }
-    } else {
-        // Para ángulos mayores a 180 grados
-        progressElement.style.transform = `rotate(${90 + angle}deg)`;
-        progressElement.style.clip = 'rect(auto, auto, auto, auto)';
-
-        // Crear o actualizar el segundo arco
-        let secondArc = progressElement.parentNode.querySelector('.progress-second-arc');
-        if (!secondArc) {
-            secondArc = document.createElement('div');
-            secondArc.className = 'progress-circle-fill progress-second-arc';
-            secondArc.style.borderTopColor = '#39A900';
-            progressElement.parentNode.appendChild(secondArc);
-        }
-
-        secondArc.style.transform = 'rotate(90deg)';
-        secondArc.style.clip = 'rect(0, 125px, 250px, 0)';
+    // Función de easing
+    function easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
     }
-}
 
-// Función de easing para animación suave
-function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
+    // Carga inicial con el porcentaje del texto
+    const initialText = progressText.textContent;
+    const initialPercent = initialText ? parseInt(initialText.replace('%', '')) || 0 : 0;
+    updateProgress(initialPercent);
+
+    // Para actualizaciones dinámicas
+    window.updateProgressChart = updateProgress;
 }
 
 <!--EDITAR PERFILLL-->
