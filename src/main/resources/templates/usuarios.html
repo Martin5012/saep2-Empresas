@@ -34,13 +34,11 @@
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
         <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
-
     </nav>
 </div>
 
 <!-- Contenido principal -->
 <div style="padding: 20px;">
-
     <!-- Título -->
     <h1 class="text-success">Lista de Usuarios</h1>
 
@@ -50,75 +48,152 @@
     <!-- Botón para ir al formulario -->
     <a th:href="@{/vistau/form}" class="btn btn-success mb-3">Registrar Usuario</a>
 
+    <!-- Formulario de búsqueda -->
     <form class="input-group mb-3" th:action="@{/vista/usuarios}" method="get">
         <input type="text" name="buscar" class="form-control" placeholder="Buscar usuarios..." th:value="${buscar}" />
+        <input type="hidden" name="page" value="0" />
+        <input type="hidden" name="size" th:value="${size}" />
         <button class="btn btn-outline-secondary" type="submit">🔍 Buscar</button>
     </form>
 
+    <!-- Información de paginación -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <span class="text-muted">
+                Mostrando <strong th:text="${#lists.size(usuarios)}"></strong> de
+                <strong th:text="${totalElements}"></strong> usuarios
+            </span>
+        </div>
+        <div>
+            <span class="text-muted">
+                Página <strong th:text="${currentPage + 1}"></strong> de
+                <strong th:text="${totalPages}"></strong>
+            </span>
+        </div>
+    </div>
+
+    <!-- Mensaje si no hay usuarios -->
     <div th:if="${#lists.isEmpty(usuarios)}" class="alert alert-warning">
         No se encontraron usuarios con ese criterio.
     </div>
 
+    <!-- Tabla de usuarios -->
+    <div th:if="${!#lists.isEmpty(usuarios)}">
+        <table class="table table-bordered table-striped">
+            <thead class="table-success">
+            <tr>
+                <th hidden="hidden">ID Usuario</th>
+                <th>Tipo Dc</th>
+                <th>Número</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th hidden="hidden">Dirección</th>
+                <th hidden="hidden">Email</th>
+                <th hidden="hidden">Email Insti</th>
+                <th hidden="hidden">Contacto 1</th>
+                <th hidden="hidden">Contacto 2</th>
+                <th hidden="hidden">Clave</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Itera sobre la lista de usuarios enviada desde el controlador -->
+            <tr th:each="usuarios : ${usuarios}">
+                <td th:text="${usuarios.id_usuarios}" hidden="hidden"></td>
+                <td th:text="${usuarios.tipo_dc}"></td>
+                <td th:text="${usuarios.numero}"></td>
+                <td th:text="${usuarios.nombres}"></td>
+                <td th:text="${usuarios.apellidos}"></td>
+                <td th:text="${usuarios.direccion}" hidden="hidden"></td>
+                <td th:text="${usuarios.email}" hidden="hidden"></td>
+                <td th:text="${usuarios.email_insti}" hidden="hidden"></td>
+                <td th:text="${usuarios.contacto1}" hidden="hidden"></td>
+                <td th:text="${usuarios.contacto2}" hidden="hidden"></td>
+                <td th:text="${usuarios.clave}" hidden="hidden"></td>
+                <td th:text="${usuarios.idRol.roles}"></td>
+                <td th:text="${usuarios.estado}"></td>
+                <td>
+                    <a th:href="@{'/vistau/editar/' + ${usuarios.id_usuarios}}" class="btn btn-warning btn-sm">Editar</a>
 
-    <!-- Tabla de productos -->
-    <table class="table table-bordered table-striped">
-        <thead class="table-success">
-        <tr>
-            <th hidden="hidden">ID Usuario</th>
-            <th>Tipo Dc</th>
-            <th>Número</th>
-            <th>Nombres</th>
-            <th>Apellidos</th>
-            <th hidden="hidden">Dirección</th>
-            <th hidden="hidden">Email</th>
-            <th hidden="hidden">Email Insti</th>
-            <th hidden="hidden">Contacto 1</th>
-            <th hidden="hidden">Contacto 2</th>
-            <th hidden="hidden">Clave</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Itera sobre la lista de productos enviada desde el controlador -->
-        <tr th:each="usuarios : ${usuarios}">
-            <td th:text="${usuarios.id_usuarios}" hidden="hidden"></td>
-            <td th:text="${usuarios.tipo_dc}"></td>
-            <td th:text="${usuarios.numero}"></td>
-            <td th:text="${usuarios.nombres}"></td>
-            <td th:text="${usuarios.apellidos}"></td>
-            <td th:text="${usuarios.direccion}" hidden="hidden"></td>
-            <td th:text="${usuarios.email}" hidden="hidden"></td>
-            <td th:text="${usuarios.email_insti}" hidden="hidden"></td>
-            <td th:text="${usuarios.contacto1}" hidden="hidden"></td>
-            <td th:text="${usuarios.contacto2}" hidden="hidden"></td>
-            <td th:text="${usuarios.clave}" hidden="hidden"></td>
-            <td th:text="${usuarios.idRol.roles}"></td>
-            <td th:text="${usuarios.estado}"></td>
-            <td>
-                <a th:href="@{'/vistau/editar/' + ${usuarios.id_usuarios}}" class="btn btn-warning btn-sm">Editar</a>
-
-                <!-- Botón que abre el modal del aprendiz -->
-                <button type="button"
-                        class="btn btn-info btn-sm"
-                        data-bs-toggle="modal"
-                        th:data-bs-target="'#modalUsuario' + ${usuarios.id_usuarios}">
-                    Ver perfil
-                </button>
-
-                <form th:action="@{'/vistau/eliminar/' + ${usuarios.id_usuarios}}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('¿Está seguro que desea eliminar este producto?')">
-                        Eliminar
+                    <!-- Botón que abre el modal del usuario -->
+                    <button type="button"
+                            class="btn btn-info btn-sm"
+                            data-bs-toggle="modal"
+                            th:data-bs-target="'#modalUsuario' + ${usuarios.id_usuarios}">
+                        Ver perfil
                     </button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 
-    <!-- Modales de los aprendices -->
+                    <form th:action="@{'/vistau/eliminar/' + ${usuarios.id_usuarios}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Está seguro que desea eliminar este usuario?')">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Controles de paginación -->
+        <nav aria-label="Paginación de usuarios" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Botón Anterior -->
+                <li class="page-item" th:classappend="${!hasPrevious} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/vista/usuarios(page=${currentPage - 1}, size=${size}, buscar=${buscar})}"
+                       th:if="${hasPrevious}">
+                        Anterior
+                    </a>
+                    <span class="page-link" th:unless="${hasPrevious}">Anterior</span>
+                </li>
+
+                <!-- Números de página -->
+                <li class="page-item"
+                    th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${pageNum == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/vista/usuarios(page=${pageNum}, size=${size}, buscar=${buscar})}"
+                       th:text="${pageNum + 1}"
+                       th:if="${pageNum != currentPage}">
+                    </a>
+                    <span class="page-link"
+                          th:if="${pageNum == currentPage}"
+                          th:text="${pageNum + 1}">
+                    </span>
+                </li>
+
+                <!-- Botón Siguiente -->
+                <li class="page-item" th:classappend="${!hasNext} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/vista/usuarios(page=${currentPage + 1}, size=${size}, buscar=${buscar})}"
+                       th:if="${hasNext}">
+                        Siguiente
+                    </a>
+                    <span class="page-link" th:unless="${hasNext}">Siguiente</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Selector de elementos por página -->
+        <div class="d-flex justify-content-center mt-3">
+            <form th:action="@{/vista/usuarios}" method="get" class="form-inline">
+                <input type="hidden" name="page" value="0" />
+                <input type="hidden" name="buscar" th:value="${buscar}" />
+                <label for="sizeSelect" class="form-label me-2">Mostrar:</label>
+                <select name="size" id="sizeSelect" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="10" th:selected="${size == 10}">10</option>
+                    <option value="15" th:selected="${size == 15}">15</option>
+                    <option value="25" th:selected="${size == 25}">25</option>
+                    <option value="50" th:selected="${size == 50}">50</option>
+                </select>
+                <span class="form-text ms-2">registros por página</span>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modales de los usuarios -->
     <div th:each="usuarios : ${usuarios}">
         <div class="modal fade"
              th:id="'modalUsuario' + ${usuarios.id_usuarios}"
@@ -147,19 +222,19 @@
                             <span th:text="${usuarios != null ? usuarios.email : 'Sin email'}"></span>
                         </p>
                         <p><strong>Correo Institucional:</strong>
-                            <span th:text="${usuarios != null ? usuarios.email_insti : 'Sin Correo Insttitucional'}"></span>
+                            <span th:text="${usuarios != null ? usuarios.email_insti : 'Sin Correo Institucional'}"></span>
                         </p>
                         <p><strong>Teléfono:</strong>
                             <span th:text="${usuarios != null ? usuarios.contacto1 : 'Sin teléfono'}"></span>
                         </p>
-                        <p><strong>Telefono Secundario:</strong>
-                            <span th:text="${usuarios != null ? usuarios.contacto2 : 'Sin Telefono Secundario'}"></span>
+                        <p><strong>Teléfono Secundario:</strong>
+                            <span th:text="${usuarios != null ? usuarios.contacto2 : 'Sin Teléfono Secundario'}"></span>
                         </p>
                         <hr>
-                        <p><strong>Direccion:</strong>
-                            <span th:text="${usuarios != null ? usuarios.direccion : 'Sin Direccion'}"></span>
+                        <p><strong>Dirección:</strong>
+                            <span th:text="${usuarios != null ? usuarios.direccion : 'Sin Dirección'}"></span>
                         </p>
-                        <p><strong>clave:</strong>
+                        <p><strong>Clave:</strong>
                             <span th:text="${usuarios != null ? usuarios.clave : 'Sin Clave'}"></span>
                         </p>
                         <p><strong>Rol:</strong>
@@ -177,7 +252,7 @@
         </div>
     </div>
 </div>
-</div>
+
 <!-- JavaScript -->
 <!-- Bootstrap JS - URL CORREGIDA -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
