@@ -54,8 +54,8 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Sede</th>
-            <th>Nombre</th>
+            <th hidden="hidden">ID Sede</th>
+            <th>Nombre de la Sede</th>
             <th>Direccion</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -64,7 +64,7 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="sedes : ${sedes}">
-            <td th:text="${sedes.id_sede}"></td>
+            <td th:text="${sedes.id_sede}" hidden="hidden"></td>
             <td th:text="${sedes.nombre}"></td>
             <td th:text="${sedes.direccion}"></td>
             <td th:text="${sedes.estado}"></td>

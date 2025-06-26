@@ -78,10 +78,10 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Empresas</th>
-            <th>ID Usuarios</th>
+            <th hidden="hidden">ID Empresas</th>
+            <th>Coevaluador</th>
             <th>Nit</th>
-            <th>Nombre</th>
+            <th>Nombre de la Empresa</th>
             <th>Direccion</th>
             <th>Area</th>
             <th>Contacto</th>
@@ -96,8 +96,8 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="empresas : ${empresas}">
-            <td th:text="${empresas.id_empresas}"></td>
-            <td th:text="${empresas.id_usuarios != null ? empresas.id_usuarios.nombres : 'Sin usuario'}"></td>
+            <td th:text="${empresas.id_empresas}" hidden="hidden"></td>
+            <td th:text="${empresas.id_usuarios != null ? empresas.id_usuarios.nombres+ ' ' + empresas.id_usuarios.apellidos : 'Sin usuario'}"></td>
             <td th:text="${empresas.nit}"></td>
             <td th:text="${empresas.nombre}"></td>
             <td th:text="${empresas.direccion}"></td>

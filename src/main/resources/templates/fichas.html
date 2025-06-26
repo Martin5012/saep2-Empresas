@@ -69,11 +69,11 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Ficha</th>
+            <th hidden="hidden">ID Ficha</th>
             <th>Código</th>
-            <th>ID Programa</th>
+            <th>Programa</th>
             <th>Modalidad</th>
-            <th>ID Sede</th>
+            <th>Sede</th>
             <th>Jornada</th>
             <th>Nivel Formación</th>
             <th>Fecha Inicio</th>
@@ -87,7 +87,7 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="fichas : ${fichas}">
-            <td th:text="${fichas.id_fichas}"></td>
+            <td th:text="${fichas.id_fichas}" hidden="hidden"></td>
             <td th:text="${fichas.codigo}"></td>
             <td th:text="${fichas.idProgramas.nombre}"></td>
             <td th:text="${fichas.modalidad}"></td>

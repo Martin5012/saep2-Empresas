@@ -12,6 +12,7 @@ public interface UsuariosRepository extends JpaRepository<Usuarios,Long> {
     @Query("SELECT u FROM Usuarios u WHERE " +
             "LOWER(u.nombres) LIKE LOWER(CONCAT('%', :criterio, '%')) OR " +
             "LOWER(u.apellidos) LIKE LOWER(CONCAT('%', :criterio, '%')) OR " +
+            "LOWER(u.idRol.roles) LIKE LOWER(CONCAT('%', :criterio, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :criterio, '%'))")
     List<Usuarios> buscarPorCriterio(@Param("criterio") String criterio);
 

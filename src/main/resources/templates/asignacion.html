@@ -33,6 +33,7 @@
         <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
+        <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
     </nav>
 </div>
 
@@ -61,7 +62,7 @@
     <table id="tablaAprendices" class="table table-bordered table-striped">
     <thead class="table-success">
         <tr>
-            <th>ID Aprendiz</th>
+            <th hidden="hidden">Aprendiz</th>
             <th>Nombres y Apellidos</th>
             <th>Codigo de Ficha</th>
             <th>Instructor</th>
@@ -72,10 +73,10 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="aprendices : ${aprendices}">
-            <td th:text="${aprendices.id_aprendices}"></td>
+            <td th:text="${aprendices.id_aprendices}" hidden="hidden"></td>
             <td th:text="${aprendices.idUsuarios != null ? aprendices.idUsuarios.nombres + ' ' + aprendices.idUsuarios.apellidos : 'Sin usuario'}"></td>
             <td th:text="${aprendices.idFichas != null ? aprendices.idFichas.codigo : 'Sin Codigo'}"></td>
-            <td th:text="${aprendices.idInstructor != null ? aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos : 'Sin Instructor'}"></td>
+            <td th:text="${aprendices.idInstructor != null ? aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos : 'Sin Asignar'}"></td>
             <td th:text="${aprendices.estado}"></td>
             <td>
                 <button type="button"
@@ -121,7 +122,7 @@
                 <table class="table table-bordered table-striped" id="tablaEvaluadores">
                     <thead class="table-success">
                     <tr>
-                        <th>ID</th>
+                        <th>Nro de identificacion</th>
                         <th>Nombre</th>
                         <th>Correo</th>
                         <th>Acción</th>

@@ -54,7 +54,7 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Modalidad</th>
+            <th hidden="hidden">ID Modalidad</th>
             <th>Modalidades</th>
             <th>Acciones</th>
         </tr>
@@ -62,7 +62,7 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="modalidad : ${modalidad}">
-            <td th:text="${modalidad.id_modalidad}"></td>
+            <td th:text="${modalidad.id_modalidad}" hidden="hidden"></td>
             <td th:text="${modalidad.modalidades}"></td>
             <td>
                 <a th:href="@{'/vistam/editar/' + ${modalidad.id_modalidad}}" class="btn btn-warning btn-sm">Editar</a>
