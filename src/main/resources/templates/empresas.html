@@ -66,12 +66,16 @@
 
     <!-- Botón para ir al formulario -->
     <a th:href="@{/vista/form}" class="btn btn-success btn-empresa">Registrar Empresa</a>
-    <a th:href="@{/empresas/pdf}" class="btn btn-generar-pdf btn-empresa" target="_blank">Generar PDF</a>
-    <a th:href="@{/empresas/excel}" class="btn btn-generar-pdf btn-empresa" target="_blank">Generar Excel</a>
+    <a th:href="@{/empresas/pdf}" class="btn btn-danger mb-3" target="_blank">📄 Exportar PDF</a>
+    <a th:href="@{/empresas/excel}" class="btn btn-success mb-3" target="_blank">📊 Exportar Excel</a>
+
+    <!-- Barra de búsqueda -->
     <form class="input-group mb-3" th:action="@{/vista/empresas}" method="get">
         <input type="text" name="buscar" class="form-control" placeholder="Buscar..." />
         <button class="btn btn-outline-secondary" type="submit">🔍 Buscar</button>
     </form>
+
+
 
 
     <!-- Tabla de productos -->
