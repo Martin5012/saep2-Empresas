@@ -1,15 +1,14 @@
 package com.juan.curso.springboot.webapp.saep.controller;
 
+import com.juan.curso.springboot.webapp.saep.model.Aprendices;
+import com.juan.curso.springboot.webapp.saep.model.Modalidad;
 import com.juan.curso.springboot.webapp.saep.model.Usuarios;
-import com.juan.curso.springboot.webapp.saep.repository.EditarPerfilRepository;
+import com.juan.curso.springboot.webapp.saep.repository.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -19,26 +18,42 @@ public class VistaEditarPerfil {
     @Autowired
     private EditarPerfilRepository editarPerfilRepository;
 
+    @Autowired
+    private AprendicesRepository aprendicesRepository;
+
+    @Autowired
+    private FichasRepository fichasRepository;
+
+    @Autowired
+    private ModalidadRepository modalidadRepository;
+
+    @Autowired
+    private EmpresasRepository empresasRepository;
+
+
+
     @GetMapping("/vista/editarperfil")
     public String editarPerfil(Model model, HttpSession session) {
-        Long idUsuarioLogueado = (Long) session.getAttribute("idUsuarioLogueado");
+        Usuarios usuario = (Usuarios) session.getAttribute("usuarioLogueado");
 
-        if (idUsuarioLogueado == null) {
-            // Si no hay usuario en sesión, redirigir al login
-            return "redirect:/login";
+        // Verificamos si hay un usuario logueado
+        if (usuario == null) {
+            // Redirige al login si no hay sesión
+            return "redirect:/login"; // Cambia esto si tu login está en otra ruta
         }
 
-        Optional<Usuarios> usuario = editarPerfilRepository.findById(idUsuarioLogueado);
+        model.addAttribute("usuarios", usuario);
 
-        if (usuario.isPresent()) {
-            model.addAttribute("usuarios", usuario.get());
-        } else {
-            // Si no existe, se carga un objeto vacío para evitar errores
-            return "redirect:/login";
+        if (usuario.getId_rol() == 1) {
+            Aprendices aprendiz = aprendicesRepository.findByIdUsuario(usuario.getId_usuarios());
+            model.addAttribute("aprendiz", aprendiz);
+            model.addAttribute("listaFichas", fichasRepository.findAll());
+            model.addAttribute("listaModalidades", modalidadRepository.findAll());
+            model.addAttribute("listaEmpresas", empresasRepository.findAll());
         }
 
-        //model.addAttribute("usuarios", editarPerfilRepository.findAll()); // Envía los productos a la vista
-        return "editarperfil"; // Devuelve la plantilla productos.html
+
+        return "editarperfil";
     }
 
     @GetMapping("/vistaEditar/editar/{id}")
@@ -63,7 +78,12 @@ public class VistaEditarPerfil {
     }
 
     @PostMapping("/vistaEditar/guardar")
-    public String guardarPerfil(@ModelAttribute Usuarios usuarios, RedirectAttributes ra, HttpSession session) {
+    public String guardarPerfil(@ModelAttribute Usuarios usuarios,
+                                @RequestParam(required = false) Long id_aprendices,
+                                @RequestParam(required = false, name = "estado_formativo") String estadoFormativo,
+                                @RequestParam(required = false) Long id_modalidad,
+                                RedirectAttributes ra,
+                                HttpSession session) {
 
         // ★ VERIFICAMOS QUE EL USUARIO SOLO PUEDA GUARDAR SU PROPIO PERFIL ★
         Long idUsuarioLogueado = (Long) session.getAttribute("idUsuarioLogueado");
@@ -78,6 +98,26 @@ public class VistaEditarPerfil {
             return "redirect:/vista/editarperfil";
         }
         editarPerfilRepository.save(usuarios);
+
+        // 2. Si es aprendiz, actualizar campos extra
+        if (usuarios.getId_rol() == 1 && id_aprendices != null) {
+            Aprendices aprendiz = aprendicesRepository.findById(id_aprendices).orElse(null);
+            if (aprendiz != null) {
+                aprendiz.setEstado(estadoFormativo);
+
+                Modalidad modalidad = new Modalidad();
+                modalidad.setId_modalidad(id_modalidad);
+                aprendiz.setIdModalidades(modalidad);
+
+                aprendicesRepository.save(aprendiz);
+            }
+        }
+
+
+        // 🔄 Refrescar el objeto actualizado en la sesión
+        Usuarios actualizado = editarPerfilRepository.findById(usuarios.getId_usuarios()).orElse(null);
+        session.setAttribute("usuarioLogueado", actualizado);
+
         ra.addFlashAttribute("mensaje", "Datos guardados exitosamente");
         return "redirect:/vista/editarperfil"; // Redirige al listado
     }
