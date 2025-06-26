@@ -64,18 +64,18 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Usuario</th>
+            <th hidden="hidden">ID Usuario</th>
             <th>Tipo Dc</th>
             <th>Número</th>
             <th>Nombres</th>
             <th>Apellidos</th>
-            <th>Dirección</th>
-            <th>Email</th>
-            <th>Email Insti</th>
-            <th>Contacto 1</th>
-            <th>Contacto 2</th>
-            <th>Clave</th>
-            <th>ID Rol</th>
+            <th hidden="hidden">Dirección</th>
+            <th hidden="hidden">Email</th>
+            <th hidden="hidden">Email Insti</th>
+            <th hidden="hidden">Contacto 1</th>
+            <th hidden="hidden">Contacto 2</th>
+            <th hidden="hidden">Clave</th>
+            <th>Rol</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
@@ -83,17 +83,17 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="usuarios : ${usuarios}">
-            <td th:text="${usuarios.id_usuarios}"></td>
+            <td th:text="${usuarios.id_usuarios}" hidden="hidden"></td>
             <td th:text="${usuarios.tipo_dc}"></td>
             <td th:text="${usuarios.numero}"></td>
             <td th:text="${usuarios.nombres}"></td>
             <td th:text="${usuarios.apellidos}"></td>
-            <td th:text="${usuarios.direccion}"></td>
-            <td th:text="${usuarios.email}"></td>
-            <td th:text="${usuarios.email_insti}"></td>
-            <td th:text="${usuarios.contacto1}"></td>
-            <td th:text="${usuarios.contacto2}"></td>
-            <td th:text="${usuarios.clave}"></td>
+            <td th:text="${usuarios.direccion}" hidden="hidden"></td>
+            <td th:text="${usuarios.email}" hidden="hidden"></td>
+            <td th:text="${usuarios.email_insti}" hidden="hidden"></td>
+            <td th:text="${usuarios.contacto1}" hidden="hidden"></td>
+            <td th:text="${usuarios.contacto2}" hidden="hidden"></td>
+            <td th:text="${usuarios.clave}" hidden="hidden"></td>
             <td th:text="${usuarios.idRol.roles}"></td>
             <td th:text="${usuarios.estado}"></td>
             <td>

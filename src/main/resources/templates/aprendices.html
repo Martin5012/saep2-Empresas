@@ -33,6 +33,7 @@
         <a class="nav-link text-white" th:href="@{/vista/sedes}">🖼️ Sede</a>
         <a class="nav-link text-white" th:href="@{/vista/seguimiento}">📡 Seguimiento</a>
         <a class="nav-link text-white" th:href="@{/vista/usuarios}">👥 Usuario</a>
+        <a class="nav-link text-white" th:href="@{/vista/editarperfil}">👤 Mi Perfil</a>
     </nav>
 </div>
 
@@ -61,11 +62,11 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Aprendiz</th>
+            <th hidden="hidden">ID Aprendiz</th>
             <th>Nombres y Apellidos</th>
             <th>Codigo de Ficha</th>
             <th>Empresa</th>
-            <th>Instructor</th>
+            <th hidden="hidden">Instructor</th>
             <th>Modalidad</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -74,11 +75,11 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="aprendices : ${aprendices}">
-            <td th:text="${aprendices.id_aprendices}"></td>
+            <td th:text="${aprendices.id_aprendices}" hidden="hidden"></td>
             <td th:text="${aprendices.idUsuarios != null ? aprendices.idUsuarios.nombres + ' ' + aprendices.idUsuarios.apellidos : 'Sin usuario'}"></td>
             <td th:text="${aprendices.idFichas != null ? aprendices.idFichas.codigo : 'Sin Codigo'}"></td>
             <td th:text="${aprendices.idEmpresas != null ? aprendices.idEmpresas.nombre : 'Sin Empresa'}"></td>
-            <td th:text="${aprendices.idInstructor != null ? aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos : 'Sin Instructor'}"></td>
+            <td th:text="${aprendices.idInstructor != null ? aprendices.idInstructor.nombres+' '+ aprendices.idInstructor.apellidos : 'Sin Asignar'}"hidden="hidden"></td>
             <td th:text="${aprendices.idModalidades != null ? aprendices.idModalidades.modalidades : 'Sin Modalidad'}"></td>
             <td th:text="${aprendices.estado}"></td>
             <td>

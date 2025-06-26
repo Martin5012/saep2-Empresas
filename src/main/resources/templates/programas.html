@@ -64,8 +64,8 @@
     <table class="table table-bordered table-striped">
         <thead class="table-success">
         <tr>
-            <th>ID Programa</th>
-            <th>Nombre</th>
+            <th hidden="hidden">ID Programa</th>
+            <th>Nombre del Programa</th>
             <th>Versión</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -74,7 +74,7 @@
         <tbody>
         <!-- Itera sobre la lista de productos enviada desde el controlador -->
         <tr th:each="programas : ${programas}">
-            <td th:text="${programas.id_programas}"></td>
+            <td th:text="${programas.id_programas}" hidden="hidden"></td>
             <td th:text="${programas.nombre}"></td>
             <td th:text="${programas.version}"></td>
             <td th:text="${programas.estado}"></td>
